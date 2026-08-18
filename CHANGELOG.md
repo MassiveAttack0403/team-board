@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.1] — 2026-08-18
+
+### Fixed
+- Task-Speichern-Bug: Inline-Add hat jetzt sichtbaren Speichern-Button (+) und Abbrechen-Button
+- Spaltenbreite auf 165px reduziert (war 200-240px)
+- Task-Count-Badge wird türkis wenn Tasks vorhanden
+
+### Changed
+- Kompletter CSS-Overhaul: kompakteres Design, bessere Schatten, Header mit Gradient, Modals mit Blur-Overlay, Karten mit Hover-Animation
+
 ## [0.2.0] — 2026-08-18
 
 ### Added

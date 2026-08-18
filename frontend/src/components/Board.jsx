@@ -1,4 +1,4 @@
-// Version: 0.2.0
+// Version: 0.2.1
 import React, { useEffect, useState, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
@@ -249,7 +249,7 @@ export default function Board() {
               <div key={member.id} className="column">
                 <div className="column-header">
                   <span className="column-name">{member.name}</span>
-                  <span className="task-count">{memberTasks.length}</span>
+                  <span className={`task-count${memberTasks.length > 0 ? ' has-tasks' : ''}`}>{memberTasks.length}</span>
                   <button className="btn-abw" onClick={() => setAbsenceModal(member)} title="Abwesenheit eintragen">Abw</button>
                 </div>
                 <AbsenceBadge absences={absences} memberId={member.id} />
@@ -276,20 +276,23 @@ export default function Board() {
                     </div>
                   )}
                 </Droppable>
-                {addingTo === member.id ? (
-                  <div style={{ padding: '0 8px 8px' }}>
-                    <input
-                      autoFocus
-                      value={newTitle}
-                      onChange={e => setNewTitle(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') handleAddTask(member.id); if (e.key === 'Escape') setAddingTo(null); }}
-                      placeholder="Task-Name…"
-                      style={{ width: '100%', padding: '4px 6px', borderRadius: 4, border: '1px solid #cbd5e1', fontSize: '0.82rem' }}
-                    />
-                  </div>
-                ) : (
-                  <button className="add-task-btn" onClick={() => setAddingTo(member.id)}>+ Task</button>
-                )}
+                <div className="add-task-area">
+                  {addingTo === member.id ? (
+                    <div className="add-task-input-row">
+                      <input
+                        autoFocus
+                        value={newTitle}
+                        onChange={e => setNewTitle(e.target.value)}
+                        onKeyDown={e => { if (e.key === 'Enter') handleAddTask(member.id); if (e.key === 'Escape') { setAddingTo(null); setNewTitle(''); } }}
+                        placeholder="Task-Name…"
+                      />
+                      <button className="btn-save-task" onClick={() => handleAddTask(member.id)} title="Speichern">+</button>
+                      <button className="btn-cancel-task" onClick={() => { setAddingTo(null); setNewTitle(''); }} title="Abbrechen">×</button>
+                    </div>
+                  ) : (
+                    <button className="add-task-btn" onClick={() => setAddingTo(member.id)}>+ Task</button>
+                  )}
+                </div>
               </div>
             );
           })}

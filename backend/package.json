@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node --experimental-sqlite src/index.js",
-    "dev": "node --experimental-sqlite --watch src/index.js"
+    "dev": "node --experimental-sqlite --watch src/index.js",
+    "seed": "node --experimental-sqlite src/db/seed.js"
   },
   "dependencies": {
     "express": "^4.19.2",

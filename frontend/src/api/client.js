@@ -1,4 +1,4 @@
-// Version: 0.1.0
+// Version: 0.2.0
 import axios from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
@@ -15,5 +15,8 @@ export const deleteTask = (id) => api.delete(`/tasks/${id}`).then(r => r.data);
 
 export const createAbsence = (payload) => api.post('/absences', payload).then(r => r.data);
 export const deleteAbsence = (id) => api.delete(`/absences/${id}`).then(r => r.data);
+
+export const createMember = (payload) => api.post('/members', payload).then(r => r.data);
+export const deleteMember = (id) => api.delete(`/members/${id}`).then(r => r.data);
 
 export const createStandup = (payload) => api.post('/standups', payload).then(r => r.data);

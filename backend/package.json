@@ -1,20 +1,16 @@
 {
   "name": "team-board-backend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Team Board – API Server",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node --experimental-sqlite src/index.js",
+    "dev": "node --experimental-sqlite --watch src/index.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "better-sqlite3": "^9.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "@azure/msal-node": "^2.9.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.4"
   }
 }

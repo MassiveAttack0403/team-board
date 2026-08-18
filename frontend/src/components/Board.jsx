@@ -1,4 +1,4 @@
-// Version: 0.2.1
+// Version: 0.3.0
 import React, { useEffect, useState, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
@@ -29,6 +29,7 @@ function TaskModal({ task, onClose, onSave, onDelete }) {
           onChange={e => setTitle(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && save()}
           placeholder="Titel"
+          autoFocus
         />
         <textarea
           className="modal-textarea"
@@ -121,24 +122,12 @@ function MemberPanel({ members, onClose, onAdd, onDelete }) {
           {members.map(m => (
             <div key={m.id} className="member-item">
               <span>{m.name}</span>
-              <button className="btn-danger-sm" onClick={() => onDelete(m.id)} title="Entfernen">×</button>
+              <button className="btn-danger-sm" onClick={() => onDelete(m.id)}>×</button>
             </div>
           ))}
         </div>
-        <input
-          className="modal-input"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && add()}
-          placeholder="Name"
-        />
-        <input
-          className="modal-input"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && add()}
-          placeholder="E-Mail (optional)"
-        />
+        <input className="modal-input" value={name} onChange={e => setName(e.target.value)} placeholder="Name" />
+        <input className="modal-input" value={email} onChange={e => setEmail(e.target.value)} placeholder="E-Mail (optional)" />
         <div className="modal-actions">
           <button className="btn-primary" onClick={add}>Hinzufügen</button>
           <button className="btn-secondary" onClick={onClose}>Schließen</button>
@@ -157,6 +146,15 @@ function AbsenceBadge({ absences, memberId }) {
     </div>
   ));
 }
+
+function initials(name) {
+  return name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+}
+
+const AVATAR_COLORS = [
+  '#6366f1','#0ea5e9','#10b981','#f59e0b','#ef4444',
+  '#8b5cf6','#ec4899','#14b8a6','#f97316','#84cc16',
+];
 
 export default function Board() {
   const [members, setMembers] = useState([]);
@@ -187,10 +185,14 @@ export default function Board() {
 
   const handleAddTask = async (memberId) => {
     if (!newTitle.trim()) return;
-    await createTask({ member_id: memberId, title: newTitle.trim() });
-    setNewTitle('');
-    setAddingTo(null);
-    load();
+    try {
+      await createTask({ member_id: memberId, title: newTitle.trim() });
+      setNewTitle('');
+      setAddingTo(null);
+      load();
+    } catch (e) {
+      console.error('createTask failed', e);
+    }
   };
 
   const handleSaveTask = async (updates) => {
@@ -243,30 +245,43 @@ export default function Board() {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="board">
-          {members.map(member => {
+          {members.map((member, idx) => {
             const memberTasks = tasks.filter(t => t.member_id === member.id).sort((a, b) => a.position - b.position);
+            const color = AVATAR_COLORS[idx % AVATAR_COLORS.length];
+            const isAbsent = absences.some(a => {
+              const today = new Date().toISOString().slice(0, 10);
+              return a.member_id === member.id && a.date_from <= today && a.date_to >= today;
+            });
             return (
-              <div key={member.id} className="column">
-                <div className="column-header">
-                  <span className="column-name">{member.name}</span>
-                  <span className={`task-count${memberTasks.length > 0 ? ' has-tasks' : ''}`}>{memberTasks.length}</span>
-                  <button className="btn-abw" onClick={() => setAbsenceModal(member)} title="Abwesenheit eintragen">Abw</button>
+              <div key={member.id} className={`column${isAbsent ? ' column-absent' : ''}`}>
+                <div className="column-header" style={{ '--accent': color }}>
+                  <div className="avatar" style={{ background: color }}>{initials(member.name)}</div>
+                  <div className="column-meta">
+                    <span className="column-name">{member.name}</span>
+                    <span className="column-sub">{memberTasks.length} Task{memberTasks.length !== 1 ? 's' : ''}</span>
+                  </div>
+                  <button className="btn-abw" onClick={() => setAbsenceModal(member)} title="Abwesenheit">Abw</button>
                 </div>
                 <AbsenceBadge absences={absences} memberId={member.id} />
                 <Droppable droppableId={String(member.id)}>
-                  {(provided) => (
-                    <div className="task-list" ref={provided.innerRef} {...provided.droppableProps}>
+                  {(provided, snapshot) => (
+                    <div
+                      className={`task-list${snapshot.isDraggingOver ? ' drag-over' : ''}`}
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
                       {memberTasks.map((task, index) => (
                         <Draggable key={task.id} draggableId={String(task.id)} index={index}>
                           {(prov, snap) => (
                             <div
-                              className={`task-card ${task.priority ? 'priority-high' : ''} ${task.source === 'email' ? 'task-source-email' : ''} ${snap.isDragging ? 'dragging' : ''}`}
+                              className={`task-card${task.priority ? ' priority-high' : ''}${snap.isDragging ? ' dragging' : ''}`}
                               ref={prov.innerRef}
                               {...prov.draggableProps}
                               {...prov.dragHandleProps}
                               onClick={() => !snap.isDragging && setEditingTask(task)}
                             >
-                              <span>{task.title}</span>
+                              {task.priority === 1 && <span className="priority-dot" title="Hohe Priorität" />}
+                              <span className="task-title">{task.title}</span>
                               {task.notes && <span className="task-notes-dot" title={task.notes} />}
                             </div>
                           )}
@@ -278,19 +293,25 @@ export default function Board() {
                 </Droppable>
                 <div className="add-task-area">
                   {addingTo === member.id ? (
-                    <div className="add-task-input-row">
+                    <form
+                      className="add-task-form"
+                      onSubmit={e => { e.preventDefault(); handleAddTask(member.id); }}
+                    >
                       <input
                         autoFocus
                         value={newTitle}
                         onChange={e => setNewTitle(e.target.value)}
-                        onKeyDown={e => { if (e.key === 'Enter') handleAddTask(member.id); if (e.key === 'Escape') { setAddingTo(null); setNewTitle(''); } }}
+                        onKeyDown={e => e.key === 'Escape' && (setAddingTo(null), setNewTitle(''))}
                         placeholder="Task-Name…"
+                        className="add-task-input"
                       />
-                      <button className="btn-save-task" onClick={() => handleAddTask(member.id)} title="Speichern">+</button>
-                      <button className="btn-cancel-task" onClick={() => { setAddingTo(null); setNewTitle(''); }} title="Abbrechen">×</button>
-                    </div>
+                      <div className="add-task-btns">
+                        <button type="submit" className="btn-add-confirm">Hinzufügen</button>
+                        <button type="button" className="btn-add-cancel" onClick={() => { setAddingTo(null); setNewTitle(''); }}>Abbrechen</button>
+                      </div>
+                    </form>
                   ) : (
-                    <button className="add-task-btn" onClick={() => setAddingTo(member.id)}>+ Task</button>
+                    <button className="add-task-btn" onClick={() => setAddingTo(member.id)}>+ Task hinzufügen</button>
                   )}
                 </div>
               </div>
@@ -307,7 +328,6 @@ export default function Board() {
           onDelete={handleDeleteTask}
         />
       )}
-
       {absenceModal && (
         <AbsenceModal
           member={absenceModal}
@@ -317,7 +337,6 @@ export default function Board() {
           onDelete={handleDeleteAbsence}
         />
       )}
-
       {showMemberPanel && (
         <MemberPanel
           members={members}

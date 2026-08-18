@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.0] — 2026-08-18
+
+### Fixed
+- Task-Speichern-Bug: `<form onSubmit>` statt bare onClick-Button — funktioniert jetzt zuverlässig in allen Browsern/DnD-Contexts
+- try/catch in handleAddTask: API-Fehler werden im Console geloggt statt still zu scheitern
+
+### Changed
+- Board-Layout: `display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))` — Spalten umbrechen statt horizontal scrollen
+- Design-Overhaul v2: Avatar-Kreise mit Initialen (Farbe pro Person), dunkler Navy-Header mit Teal-Akzent, subtile Hintergrundgradient, animierte Modals (slideUp + fadeIn), verbesserte Card-Shadows und Hover-Effekte, konsistentes CSS-Custom-Properties-System
+
 ## [0.2.1] — 2026-08-18
 
 ### Fixed

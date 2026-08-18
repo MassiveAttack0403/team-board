@@ -1,0 +1,80 @@
+# Team Board — Projekt-Instruktionen
+
+## Stack
+- **Frontend**: React 18 + @hello-pangea/dnd + Vite (Port 5173)
+- **Backend**: Node.js 22 / Express (Port 3001)
+- **DB**: `node:sqlite` (built-in Node 22, `--experimental-sqlite` flag nötig, kein Python/MSVC)
+- **DB-Datei**: `backend/data/board.db` (in .gitignore)
+
+## Starten
+```cmd
+# Terminal 1
+cd backend && npm run dev
+
+# Terminal 2
+cd frontend && npm run dev
+```
+
+## Wichtige Befehle
+```cmd
+npm run seed    # DB neu befüllen (in backend/)
+npm run start   # Produktion
+```
+
+## Projektstruktur
+```
+team-board/
+├── backend/
+│   ├── src/
+│   │   ├── db/
+│   │   │   ├── index.js     # DB-Initialisierung (node:sqlite)
+│   │   │   ├── schema.sql   # Tabellen: members, tasks, absences, standup_summaries, audit_log
+│   │   │   └── seed.js      # 13 Mitarbeiter + Tasks + Abwesenheiten vom Whiteboard
+│   │   ├── routes/
+│   │   │   ├── members.js   # GET/POST/PATCH/DELETE /api/members
+│   │   │   ├── tasks.js     # GET/POST/PATCH/:id/move /api/tasks
+│   │   │   ├── absences.js  # GET/POST/DELETE /api/absences
+│   │   │   └── standups.js  # GET/POST/DELETE /api/standups
+│   │   └── index.js         # Express App, bindet auf 0.0.0.0:3001
+│   ├── .env                 # PORT, DB_PATH, Azure AD (nicht in git)
+│   └── .env.example
+└── frontend/
+    └── src/
+        ├── api/client.js    # axios-Wrapper für alle API-Calls
+        ├── components/
+        │   ├── Board.jsx    # Haupt-Board: DnD-Spalten pro Mitarbeiter
+        │   └── StandupList.jsx  # Copilot-Zusammenfassungen
+        └── App.jsx          # Routing: / → Board, /standups → StandupList
+
+## DB-Schema
+- **members**: id, name, email, display_order
+- **tasks**: id, member_id, title, notes, priority, position, source (manual/email), source_ref, created_at, updated_at
+- **absences**: id, member_id, type (URLAUB/ZA/KS/OTHER), date_from, date_to, notes
+- **standup_summaries**: id, week (ISO z.B. 2026-W34), meeting_date, summary, source_url
+- **audit_log**: action, entity, entity_id, payload, actor, ts
+
+## Team (13 Mitarbeiter, Stand 2026-08-18)
+Mousser Kerkeni, Franz Kopecky, Emanuel Ivanovic, Jochen Steindorfer,
+Markus Trummer, Parameshwaran Raju, Ahmed Fadl, Sofiane Ichira,
+Markus Gerstl, Corinna Rehberger-Gruber, Markus Weber, Andreas Kautek, Gernot Dachs
+
+## Roadmap / Nächste Schritte
+- [ ] Member-Verwaltung UI (Hinzufügen/Entfernen von Personen im Board)
+- [ ] Abwesenheits-UI (Modal zum Anlegen von URLAUB/ZA/KS direkt im Board)
+- [ ] Outlook Drag & Drop → Task (Microsoft Graph API, braucht Azure App Registration)
+- [ ] Urlaubs-Sync aus Outlook-Kalender (OOO-Einträge automatisch importieren)
+- [ ] Azure AD SSO (MSAL)
+- [ ] Azure App Service Deployment (Siemens Tenant)
+- [ ] Teams-Tab Integration (Board direkt in Teams einbetten)
+- [ ] Workload-Anzeige (Task-Anzahl-Badge pro Spalte)
+- [ ] Task-Kommentare / Notizen
+- [ ] Priorität / Farb-Label
+
+## Umgebung
+- MS365 / Siemens-Domain (Azure AD Tenant vorhanden)
+- Outlook + Teams (Copilot-Zusammenfassungen werden manuell eingefügt)
+- Prototyp: lokal auf 0.0.0.0, später Azure App Service
+- GitHub: https://github.com/MassiveAttack0403/team-board
+
+## Globale Regeln
+Siehe `~/.claude/CLAUDE.md` — nach jeder Änderung: Version erhöhen, Header/CHANGELOG/README aktualisieren, git add (nur geänderte Files), commit, push.

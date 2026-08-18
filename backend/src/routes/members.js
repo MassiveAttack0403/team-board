@@ -1,4 +1,4 @@
-// Version: 0.1.0
+// Version: 0.1.1
 const express = require('express');
 const { getDb } = require('../db');
 const router = express.Router();
@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { name, email, display_order = 0 } = req.body;
+  const { name, email = null, display_order = 0 } = req.body;
   if (!name) return res.status(400).json({ error: 'name required' });
   const db = getDb();
   const result = db.prepare('INSERT INTO members (name, email, display_order) VALUES (?,?,?)').run(name, email, display_order);
@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
 });
 
 router.patch('/:id', (req, res) => {
-  const { name, email, display_order } = req.body;
+  const { name = null, email = null, display_order = null } = req.body;
   const db = getDb();
   db.prepare('UPDATE members SET name=COALESCE(?,name), email=COALESCE(?,email), display_order=COALESCE(?,display_order) WHERE id=?')
     .run(name, email, display_order, req.params.id);

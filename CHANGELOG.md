@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2] — 2026-08-18
+
+### Fixed
+- Backend HTTP 500 auf POST /tasks: `node:sqlite` akzeptiert kein `undefined` als Bind-Parameter — `notes`, `source_ref` auf `= null` als Default gesetzt
+- Gleiches Fix in routes/absences.js (`notes`), routes/members.js (`email`, `display_order`)
+- PATCH /tasks/:id: `title`, `notes`, `priority` ebenfalls auf `= null` defaulted
+
 ## [0.3.1] — 2026-08-18
 
 ### Fixed

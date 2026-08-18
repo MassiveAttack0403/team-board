@@ -1,4 +1,4 @@
-// Version: 0.1.0
+// Version: 0.1.1
 const express = require('express');
 const { getDb } = require('../db');
 const router = express.Router();
@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { member_id, title, notes, priority = 0, source = 'manual', source_ref } = req.body;
+  const { member_id, title, notes = null, priority = 0, source = 'manual', source_ref = null } = req.body;
   if (!member_id || !title) return res.status(400).json({ error: 'member_id + title required' });
   const db = getDb();
   const maxPos = db.prepare('SELECT COALESCE(MAX(position),0)+1 AS p FROM tasks WHERE member_id=?').get(member_id).p;
@@ -36,7 +36,7 @@ router.patch('/:id/move', (req, res) => {
 });
 
 router.patch('/:id', (req, res) => {
-  const { title, notes, priority } = req.body;
+  const { title = null, notes = null, priority = null } = req.body;
   const db = getDb();
   db.prepare('UPDATE tasks SET title=COALESCE(?,title), notes=COALESCE(?,notes), priority=COALESCE(?,priority), updated_at=datetime(\'now\') WHERE id=?')
     .run(title, notes, priority, req.params.id);

@@ -1,5 +1,5 @@
-// Version: 0.3.0
-import React, { useEffect, useState, useCallback } from 'react';
+// Version: 0.3.1
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
   getMembers, getTasks, getAbsences,
@@ -161,7 +161,8 @@ export default function Board() {
   const [tasks, setTasks] = useState([]);
   const [absences, setAbsences] = useState([]);
   const [addingTo, setAddingTo] = useState(null);
-  const [newTitle, setNewTitle] = useState('');
+  const [addError, setAddError] = useState('');
+  const inputRef = useRef(null);
   const [editingTask, setEditingTask] = useState(null);
   const [absenceModal, setAbsenceModal] = useState(null);
   const [showMemberPanel, setShowMemberPanel] = useState(false);
@@ -184,14 +185,16 @@ export default function Board() {
   };
 
   const handleAddTask = async (memberId) => {
-    if (!newTitle.trim()) return;
+    const title = inputRef.current?.value?.trim();
+    if (!title) { setAddError('Bitte einen Titel eingeben.'); return; }
+    setAddError('');
     try {
-      await createTask({ member_id: memberId, title: newTitle.trim() });
-      setNewTitle('');
+      await createTask({ member_id: memberId, title });
       setAddingTo(null);
       load();
     } catch (e) {
       console.error('createTask failed', e);
+      setAddError(`Fehler: ${e?.response?.data?.error || e.message}`);
     }
   };
 
@@ -293,25 +296,35 @@ export default function Board() {
                 </Droppable>
                 <div className="add-task-area">
                   {addingTo === member.id ? (
-                    <form
-                      className="add-task-form"
-                      onSubmit={e => { e.preventDefault(); handleAddTask(member.id); }}
-                    >
+                    <>
                       <input
+                        ref={inputRef}
                         autoFocus
-                        value={newTitle}
-                        onChange={e => setNewTitle(e.target.value)}
-                        onKeyDown={e => e.key === 'Escape' && (setAddingTo(null), setNewTitle(''))}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') { e.preventDefault(); handleAddTask(member.id); }
+                          if (e.key === 'Escape') { setAddingTo(null); setAddError(''); }
+                        }}
                         placeholder="Task-Name…"
                         className="add-task-input"
                       />
+                      {addError && <div className="add-task-error">{addError}</div>}
                       <div className="add-task-btns">
-                        <button type="submit" className="btn-add-confirm">Hinzufügen</button>
-                        <button type="button" className="btn-add-cancel" onClick={() => { setAddingTo(null); setNewTitle(''); }}>Abbrechen</button>
+                        <button
+                          className="btn-add-confirm"
+                          onMouseDown={e => { e.preventDefault(); handleAddTask(member.id); }}
+                        >
+                          Hinzufügen
+                        </button>
+                        <button
+                          className="btn-add-cancel"
+                          onMouseDown={e => { e.preventDefault(); setAddingTo(null); setAddError(''); }}
+                        >
+                          Abbrechen
+                        </button>
                       </div>
-                    </form>
+                    </>
                   ) : (
-                    <button className="add-task-btn" onClick={() => setAddingTo(member.id)}>+ Task hinzufügen</button>
+                    <button className="add-task-btn" onClick={() => { setAddError(''); setAddingTo(member.id); }}>+ Task hinzufügen</button>
                   )}
                 </div>
               </div>

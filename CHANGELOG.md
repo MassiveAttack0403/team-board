@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.1] — 2026-08-18
+
+### Fixed
+- Task-Speichern: Input jetzt als `useRef` statt State — liest den Wert direkt aus dem DOM, kein Stale-State-Problem mehr
+- Buttons nutzen `onMouseDown` + `e.preventDefault()` statt `onClick` — verhindert Focus-Blur-Race vor dem Read
+- Sichtbare Fehlermeldung wenn API-Call scheitert oder Titel leer ist
+
+### Changed
+- README auf v0.3.1 aktualisiert (Stack, Features, Roadmap)
+
 ## [0.3.0] — 2026-08-18
 
 ### Fixed

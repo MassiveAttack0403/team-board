@@ -81,6 +81,32 @@ nav a:hover {
   background: rgba(255,255,255,0.08);
 }
 
+nav a.nav-active {
+  color: #fff;
+  background: rgba(0,180,160,0.2);
+  border: 1px solid rgba(0,180,160,0.4);
+}
+
+/* ── Board toolbar (below sticky header) ── */
+.board-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: rgba(15,23,42,0.04);
+  border-bottom: 1px solid rgba(15,23,42,0.08);
+}
+
+.board-toolbar .week-label {
+  color: var(--navy);
+  background: rgba(15,23,42,0.07);
+  border: 1px solid rgba(15,23,42,0.12);
+}
+
+.board-toolbar .btn-header {
+  margin-left: auto;
+}
+
 .btn-header {
   background: rgba(0,180,160,0.15);
   border: 1px solid rgba(0,180,160,0.35);

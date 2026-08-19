@@ -1,4 +1,4 @@
-// Version: 0.4.0
+// Version: 0.4.1
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
@@ -264,15 +264,10 @@ export default function Board() {
 
   return (
     <>
-      <header>
-        <h1>Team Board</h1>
+      <div className="board-toolbar">
         <span className="week-label">{week}</span>
-        <nav>
-          <button className="btn-header" onClick={() => setShowMemberPanel(true)}>Team</button>
-          <a href="/absences">Kalender</a>
-          <a href="/standups">Standups</a>
-        </nav>
-      </header>
+        <button className="btn-header" onClick={() => setShowMemberPanel(true)}>Team verwalten</button>
+      </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="board">

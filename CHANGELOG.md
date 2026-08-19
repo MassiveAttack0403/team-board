@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.1] — 2026-08-19
+
+### Fixed
+- `db/index.js`: `ALTER TABLE ... IF NOT EXISTS` wird von Node.js built-in SQLite nicht unterstützt → try/catch; verhinderte leeres Board beim ersten Seitenaufruf
+- Persistente Navigation: Nav jetzt in `App.jsx` — bleibt auf allen Routen sichtbar (Board/Kalender/Standups)
+- Aktiver Nav-Link bekommt `nav-active`-Klasse (teal Hintergrund)
+- Board-Header (`<header>`) in `Board.jsx` und `AbsenceCalendar.jsx` entfernt; `board-toolbar` Subheader für KW-Label + "Team verwalten"-Button
+
 ## [0.4.0] — 2026-08-19
 
 ### Added

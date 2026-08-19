@@ -1,4 +1,4 @@
-// Version: 0.1.0
+// Version: 0.1.1
 import React, { useEffect, useState } from 'react';
 import { getMembers, getAbsences } from '../api/client';
 import { addDays, startOfWeek, format, getISOWeek, isToday, isPast, parseISO } from 'date-fns';
@@ -62,14 +62,9 @@ export default function AbsenceCalendar() {
 
   return (
     <>
-      <header>
-        <h1>Team Board</h1>
+      <div className="board-toolbar">
         <span className="week-label">Abwesenheitskalender</span>
-        <nav>
-          <a href="/">Board</a>
-          <a href="/standups">Standups</a>
-        </nav>
-      </header>
+      </div>
 
       <div className="cal-wrapper">
         <div className="cal-scroll">

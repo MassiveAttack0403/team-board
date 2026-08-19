@@ -1,4 +1,4 @@
-// Version: 0.2.0
+// Version: 0.3.0
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { getMembers, getPlan, setPlanEntry, deletePlanEntry } from '../api/client';
 import { startOfMonth, endOfMonth, addMonths, addDays, format, getISOWeek, isToday } from 'date-fns';
@@ -181,9 +181,8 @@ export default function PlanCalendar() {
                       style={ti ? { background: ti.bg, color: ti.fg } : undefined}
                       title={ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
                       onClick={e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
-                    >
-                      {entry?.label ? <span className="plan-cell-text">{entry.label}</span> : null}
-                    </td>
+                    />
+
                   );
                 })}
               </tr>

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.2] — 2026-08-19
+
+### Changed
+- **Plan-Kalender**: Zellen zeigen nur noch Hintergrundfarbe (kein Label-Text inline) — Details erscheinen beim Klick im Popover (`PlanCalendar.jsx` v0.3.0)
+
+### Fixed
+- Plan-Daten befüllt: 983 `plan_entries` für Aug–Nov 2026 direkt in DB eingetragen (seed_plan.js, einmalig ausgeführt)
+
 ## [0.5.1] — 2026-08-19
 
 ### Added

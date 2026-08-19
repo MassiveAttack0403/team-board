@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.1] — 2026-08-19
+
+### Added
+- **Heute-Markierung im Plan-Kalender**: aktueller Tag wird im Tag-Header (teal Hintergrund) und in den Zellen (teal Outline) hervorgehoben (`isToday` aus date-fns, neue CSS-Klassen `.plan-today-header` und `.plan-today`)
+- **Seed-Daten für Plan-Kalender**: Aug–Nov 2026 vollständig befüllt (Urlaub, Consulting geblockt/bestellt, Reise, Schulung, Home Office) — alle 13 Mitarbeiter mit Projektlabels
+
 ## [0.5.0] — 2026-08-19
 
 ### Added

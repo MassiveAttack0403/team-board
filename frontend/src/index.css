@@ -1007,6 +1007,18 @@ nav a.nav-active {
 
 .plan-type-btn:hover { filter: brightness(0.92); }
 
+.plan-today-header {
+  background: var(--teal) !important;
+  color: #fff !important;
+}
+
+.plan-today {
+  outline: 2px solid var(--teal) !important;
+  outline-offset: -2px;
+  position: relative;
+  z-index: 1;
+}
+
 /* ── Standup page ── */
 .standup-panel {
   background: var(--surface);

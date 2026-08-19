@@ -1,7 +1,7 @@
-// Version: 0.1.0
+// Version: 0.2.0
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { getMembers, getPlan, setPlanEntry, deletePlanEntry } from '../api/client';
-import { startOfMonth, endOfMonth, addMonths, addDays, format, getISOWeek } from 'date-fns';
+import { startOfMonth, endOfMonth, addMonths, addDays, format, getISOWeek, isToday } from 'date-fns';
 
 const PLAN_TYPES = [
   { key: 'consulting_blocked', label: 'Consulting geblockt',     bg: '#1e3a8a', fg: '#fff' },
@@ -162,7 +162,7 @@ export default function PlanCalendar() {
             <tr>
               <th className="plan-name-th plan-th-day" />
               {dates.map((d, i) => (
-                <th key={i} className={`plan-th-day${isWE(d) ? ' plan-we' : ''}`}>{d.getDate()}</th>
+                <th key={i} className={`plan-th-day${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today-header' : ''}`}>{d.getDate()}</th>
               ))}
             </tr>
           </thead>
@@ -177,7 +177,7 @@ export default function PlanCalendar() {
                   return (
                     <td
                       key={i}
-                      className={`plan-cell${isWE(d) ? ' plan-we' : ''}`}
+                      className={`plan-cell${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today' : ''}`}
                       style={ti ? { background: ti.bg, color: ti.fg } : undefined}
                       title={ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
                       onClick={e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}

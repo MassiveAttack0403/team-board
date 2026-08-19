@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 0.4.0
+## Version: 0.5.0
 
 ## Features
 
@@ -11,7 +11,7 @@ Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 - Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
 - Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
-- **Abwesenheitskalender** (`/absences`): 5-Wochen-Matrix wer wann absent ist
+- **Plan-Kalender** (`/plan`): 6-Monats-Consultingplan mit 12 editierbaren Kategorietypen (Consulting, Reise, Schulung, Urlaub/ZA, Home Office, …), Klick zum Bearbeiten, Projekttext-Feld
 - Team verwalten: Mitarbeiter hinzufügen / entfernen
 - Standup-Zusammenfassungen (Copilot-Text + Teams-Link speichern)
 - Grid-Layout (umbrechen statt horizontal scrollen)
@@ -65,6 +65,7 @@ Backend bindet auf `0.0.0.0:3001` — im Siemens-LAN per IP-Adresse des Hosts er
 
 ## Roadmap
 
+- [x] Plan-Kalender: 6-Monats-Consultingplan mit 12 Kategorietypen, editierbare Zellen
 - [ ] Outlook Drag & Drop → Task (Microsoft Graph API, braucht Azure App Registration)
 - [ ] Urlaubs-Sync aus Outlook-Kalender (OOO-Einträge automatisch importieren)
 - [ ] Azure AD SSO (MSAL)

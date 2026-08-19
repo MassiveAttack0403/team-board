@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0] — 2026-08-19
+
+### Added
+- **Plan-Kalender** (`/plan`): vollständiger Consultingplan-Kalender mit 12 Kategorietypen (Consulting geblockt/bestellt, Reise, Schulung, Urlaub/ZA, Home Office, Sonstiges, keine Reise, Weiter, Partner), farbkodierten Zellen und editierbaren Feldern
+- Klick auf Zelle öffnet Popover: Typ-Auswahl (12 Buttons), optionaler Projekttext, Speichern + Löschen
+- 6-Monats-Ansicht mit Navigation (‹/›) und "Heute"-Button
+- Monats-, KW-, Wochentag- und Tag-Nummer-Header (alle sticky)
+- Wochenenden farblich gedimmt
+- Legend-Leiste mit allen 12 Typen oben
+- Sticky Name-Spalte links
+- `plan_entries`-Tabelle in DB (schema.sql v0.2.0): `member_id, date, type, label, UNIQUE(member_id, date)`
+- `GET/PUT/DELETE /api/plan` Routen (`backend/src/routes/plan.js`)
+- `getPlan`, `setPlanEntry`, `deletePlanEntry` in `client.js`
+
+### Changed
+- Nav-Tab "Kalender" → "Plan", Route `/absences` → `/plan` (AbsenceCalendar entfernt aus Haupt-Nav)
+- `backend/src/index.js` v0.2.0: planRouter registriert
+- `frontend/src/api/client.js` v0.3.0: Plan-API-Funktionen ergänzt
+- `frontend/src/App.jsx` v0.4.0: PlanCalendar importiert, Route `/plan` hinzugefügt
+
 ## [0.4.1] — 2026-08-19
 
 ### Fixed

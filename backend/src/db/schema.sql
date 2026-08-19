@@ -1,4 +1,4 @@
--- Team Board Schema v0.1.0
+-- Team Board Schema v0.2.0
 
 CREATE TABLE IF NOT EXISTS members (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,4 +47,13 @@ CREATE TABLE IF NOT EXISTS audit_log (
   payload     TEXT,
   actor       TEXT,
   ts          TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS plan_entries (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  member_id   INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+  date        TEXT NOT NULL,             -- ISO date YYYY-MM-DD
+  type        TEXT NOT NULL,             -- see PLAN_TYPES in PlanCalendar.jsx
+  label       TEXT,                      -- optional project/event text
+  UNIQUE(member_id, date)
 );

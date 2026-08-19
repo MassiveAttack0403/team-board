@@ -1,4 +1,4 @@
-// Version: 0.3.1
+// Version: 0.4.0
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
@@ -7,14 +7,30 @@ import {
   createAbsence, deleteAbsence,
   createMember, deleteMember,
 } from '../api/client';
-import { getISOWeek, format } from 'date-fns';
+import { getISOWeek, format, differenceInCalendarDays, parseISO } from 'date-fns';
+
+function DueBadge({ date }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const diff = differenceInCalendarDays(parseISO(date), parseISO(today));
+  let cls = 'due-normal';
+  if (diff < 0) cls = 'due-overdue';
+  else if (diff === 0) cls = 'due-today';
+  else if (diff <= 3) cls = 'due-soon';
+  const label = diff < 0
+    ? `${Math.abs(diff)}d überfällig`
+    : diff === 0
+    ? 'Heute fällig'
+    : date.slice(5).replace('-', '.');
+  return <span className={`due-badge ${cls}`}>{label}</span>;
+}
 
 function TaskModal({ task, onClose, onSave, onDelete }) {
   const [title, setTitle] = useState(task.title);
   const [notes, setNotes] = useState(task.notes || '');
   const [priority, setPriority] = useState(!!task.priority);
+  const [dueDate, setDueDate] = useState(task.due_date || '');
 
-  const save = () => onSave({ title, notes, priority: priority ? 1 : 0 });
+  const save = () => onSave({ title, notes, priority: priority ? 1 : 0, due_date: dueDate });
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -36,12 +52,23 @@ function TaskModal({ task, onClose, onSave, onDelete }) {
           value={notes}
           onChange={e => setNotes(e.target.value)}
           placeholder="Notizen…"
-          rows={4}
+          rows={3}
         />
-        <label className="modal-check">
-          <input type="checkbox" checked={priority} onChange={e => setPriority(e.target.checked)} />
-          Hohe Priorität
-        </label>
+        <div className="modal-row">
+          <label className="modal-check">
+            <input type="checkbox" checked={priority} onChange={e => setPriority(e.target.checked)} />
+            Hohe Priorität
+          </label>
+          <div className="modal-due-field">
+            <label className="modal-due-label">Fällig</label>
+            <input
+              type="date"
+              className="modal-input modal-due-input"
+              value={dueDate}
+              onChange={e => setDueDate(e.target.value)}
+            />
+          </div>
+        </div>
         <div className="modal-actions">
           <button className="btn-primary" onClick={save}>Speichern</button>
           <button className="btn-danger" onClick={onDelete}>Löschen</button>
@@ -242,6 +269,7 @@ export default function Board() {
         <span className="week-label">{week}</span>
         <nav>
           <button className="btn-header" onClick={() => setShowMemberPanel(true)}>Team</button>
+          <a href="/absences">Kalender</a>
           <a href="/standups">Standups</a>
         </nav>
       </header>
@@ -283,9 +311,12 @@ export default function Board() {
                               {...prov.dragHandleProps}
                               onClick={() => !snap.isDragging && setEditingTask(task)}
                             >
-                              {task.priority === 1 && <span className="priority-dot" title="Hohe Priorität" />}
-                              <span className="task-title">{task.title}</span>
-                              {task.notes && <span className="task-notes-dot" title={task.notes} />}
+                              <div className="task-card-top">
+                                {task.priority === 1 && <span className="priority-chip">HOCH</span>}
+                                <span className="task-title">{task.title}</span>
+                                {task.notes && <span className="task-notes-dot" title={task.notes} />}
+                              </div>
+                              {task.due_date && <DueBadge date={task.due_date} />}
                             </div>
                           )}
                         </Draggable>

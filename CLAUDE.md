@@ -48,7 +48,7 @@ team-board/
 
 ## DB-Schema
 - **members**: id, name, email, display_order
-- **tasks**: id, member_id, title, notes, priority, position, source (manual/email), source_ref, created_at, updated_at
+- **tasks**: id, member_id, title, notes, priority, due_date, position, source (manual/email), source_ref, created_at, updated_at
 - **absences**: id, member_id, type (URLAUB/ZA/KS/OTHER), date_from, date_to, notes
 - **standup_summaries**: id, week (ISO z.B. 2026-W34), meeting_date, summary, source_url
 - **audit_log**: action, entity, entity_id, payload, actor, ts
@@ -59,16 +59,19 @@ Markus Trummer, Parameshwaran Raju, Ahmed Fadl, Sofiane Ichira,
 Markus Gerstl, Corinna Rehberger-Gruber, Markus Weber, Andreas Kautek, Gernot Dachs
 
 ## Roadmap / Nächste Schritte
-- [ ] Member-Verwaltung UI (Hinzufügen/Entfernen von Personen im Board)
-- [ ] Abwesenheits-UI (Modal zum Anlegen von URLAUB/ZA/KS direkt im Board)
+- [x] Member-Verwaltung UI (Hinzufügen/Entfernen von Personen im Board)
+- [x] Abwesenheits-UI (Modal zum Anlegen von URLAUB/ZA/KS direkt im Board)
+- [x] Teams-Tab Integration (Manifest v0.4.0 unter teams-manifest/)
+- [x] Workload-Anzeige (Task-Anzahl-Badge pro Spalte)
+- [x] Priorität / Farb-Label (HOCH-Chip + rote Randlinie)
+- [x] Fälligkeitsdatum auf Tasks (due_date, farbkodierter Badge)
+- [x] Abwesenheitskalender-Ansicht (/absences, 5-Wochen-Matrix)
 - [ ] Outlook Drag & Drop → Task (Microsoft Graph API, braucht Azure App Registration)
 - [ ] Urlaubs-Sync aus Outlook-Kalender (OOO-Einträge automatisch importieren)
 - [ ] Azure AD SSO (MSAL)
 - [ ] Azure App Service Deployment (Siemens Tenant)
-- [ ] Teams-Tab Integration (Board direkt in Teams einbetten)
-- [ ] Workload-Anzeige (Task-Anzahl-Badge pro Spalte)
-- [ ] Task-Kommentare / Notizen
-- [ ] Priorität / Farb-Label
+- [ ] Task-Kommentare / Notizen-Ansicht im Board
+- [ ] Filter nach Priorität / Fälligkeitsdatum
 
 ## Umgebung
 - MS365 / Siemens-Domain (Azure AD Tenant vorhanden)

@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   title       TEXT NOT NULL,
   notes       TEXT,
   priority    INTEGER DEFAULT 0,         -- 0=normal 1=high
+  due_date    TEXT,                      -- ISO date YYYY-MM-DD
   position    INTEGER DEFAULT 0,         -- sort order within column
   source      TEXT DEFAULT 'manual',     -- 'manual' | 'email' | 'import'
   source_ref  TEXT,                      -- email message-id if from Outlook

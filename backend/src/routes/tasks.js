@@ -1,4 +1,4 @@
-// Version: 0.1.1
+// Version: 0.1.2
 const express = require('express');
 const { getDb } = require('../db');
 const router = express.Router();
@@ -14,18 +14,17 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { member_id, title, notes = null, priority = 0, source = 'manual', source_ref = null } = req.body;
+  const { member_id, title, notes = null, priority = 0, due_date = null, source = 'manual', source_ref = null } = req.body;
   if (!member_id || !title) return res.status(400).json({ error: 'member_id + title required' });
   const db = getDb();
   const maxPos = db.prepare('SELECT COALESCE(MAX(position),0)+1 AS p FROM tasks WHERE member_id=?').get(member_id).p;
   const result = db.prepare(
-    'INSERT INTO tasks (member_id, title, notes, priority, position, source, source_ref) VALUES (?,?,?,?,?,?,?)'
-  ).run(member_id, title, notes, priority, maxPos, source, source_ref);
+    'INSERT INTO tasks (member_id, title, notes, priority, due_date, position, source, source_ref) VALUES (?,?,?,?,?,?,?,?)'
+  ).run(member_id, title, notes, priority, due_date, maxPos, source, source_ref);
   db.prepare("INSERT INTO audit_log (action,entity,entity_id,payload) VALUES ('create','task',?,?)").run(result.lastInsertRowid, JSON.stringify({ title, member_id }));
   res.status(201).json({ id: result.lastInsertRowid });
 });
 
-// move task to different member or reorder
 router.patch('/:id/move', (req, res) => {
   const { member_id, position } = req.body;
   const db = getDb();
@@ -37,9 +36,16 @@ router.patch('/:id/move', (req, res) => {
 
 router.patch('/:id', (req, res) => {
   const { title = null, notes = null, priority = null } = req.body;
+  const hasDueDate = Object.prototype.hasOwnProperty.call(req.body, 'due_date');
+  const due_date = hasDueDate ? (req.body.due_date || null) : undefined;
   const db = getDb();
-  db.prepare('UPDATE tasks SET title=COALESCE(?,title), notes=COALESCE(?,notes), priority=COALESCE(?,priority), updated_at=datetime(\'now\') WHERE id=?')
-    .run(title, notes, priority, req.params.id);
+  if (hasDueDate) {
+    db.prepare('UPDATE tasks SET title=COALESCE(?,title), notes=COALESCE(?,notes), priority=COALESCE(?,priority), due_date=?, updated_at=datetime(\'now\') WHERE id=?')
+      .run(title, notes, priority, due_date, req.params.id);
+  } else {
+    db.prepare('UPDATE tasks SET title=COALESCE(?,title), notes=COALESCE(?,notes), priority=COALESCE(?,priority), updated_at=datetime(\'now\') WHERE id=?')
+      .run(title, notes, priority, req.params.id);
+  }
   res.json({ ok: true });
 });
 

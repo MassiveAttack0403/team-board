@@ -2,13 +2,16 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 0.3.2
+## Version: 0.4.0
 
 ## Features
 
 - Board: eine Spalte pro Mitarbeiter, Drag & Drop zwischen Spalten
-- Tasks anlegen, bearbeiten (Titel/Notizen/Priorität), löschen
+- Tasks anlegen, bearbeiten (Titel / Notizen / Priorität / Fälligkeitsdatum), löschen
+- Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
+- Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
+- **Abwesenheitskalender** (`/absences`): 5-Wochen-Matrix wer wann absent ist
 - Team verwalten: Mitarbeiter hinzufügen / entfernen
 - Standup-Zusammenfassungen (Copilot-Text + Teams-Link speichern)
 - Grid-Layout (umbrechen statt horizontal scrollen)
@@ -45,6 +48,17 @@ cd backend
 npm run seed
 ```
 
+## Teams-Tab einrichten
+
+1. `teams-manifest/manifest.json` öffnen
+2. Alle `REPLACE-WITH-YOUR-DOMAIN` durch die öffentliche URL ersetzen (ngrok / Azure App Service)
+3. `REPLACE-WITH-YOUR-APP-GUID` durch eine frische GUID ersetzen (`uuidgen` oder [guidgenerator.com](https://guidgenerator.com))
+4. Zwei Icons bereitstellen: `icon-color.png` (192×192px) und `icon-outline.png` (32×32px, weiß auf transparent)
+5. Alle 3 Dateien als ZIP paketieren
+6. Teams Admin Center → Apps → Custom App hochladen oder direkt per "App hochladen" in Teams installieren
+
+Für lokale Entwicklung: [Microsoft Dev Tunnels](https://learn.microsoft.com/azure/developer/dev-tunnels/) oder ngrok als HTTPS-Tunnel.
+
 ## Hosting (Prototyp)
 
 Backend bindet auf `0.0.0.0:3001` — im Siemens-LAN per IP-Adresse des Hosts erreichbar.
@@ -55,6 +69,6 @@ Backend bindet auf `0.0.0.0:3001` — im Siemens-LAN per IP-Adresse des Hosts er
 - [ ] Urlaubs-Sync aus Outlook-Kalender (OOO-Einträge automatisch importieren)
 - [ ] Azure AD SSO (MSAL)
 - [ ] Azure App Service Deployment (Siemens Tenant)
-- [ ] Teams-Tab Integration (Board direkt in Teams einbetten)
 - [ ] Task-Kommentare / Notizen-Ansicht im Board
-- [ ] Priorität / Farb-Label
+- [ ] Filter nach Priorität / Fälligkeitsdatum im Board
+- [ ] Readonly-/Präsentationsmodus für Standup

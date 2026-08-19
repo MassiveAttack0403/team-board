@@ -1,0 +1,53 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "REPLACE-WITH-YOUR-APP-GUID",
+  "packageName": "com.siemens.teamboard",
+  "developer": {
+    "name": "Siemens Team",
+    "websiteUrl": "https://REPLACE-WITH-YOUR-DOMAIN",
+    "privacyUrl": "https://REPLACE-WITH-YOUR-DOMAIN/privacy",
+    "termsOfUseUrl": "https://REPLACE-WITH-YOUR-DOMAIN/terms"
+  },
+  "name": {
+    "short": "Team Board",
+    "full": "Siemens Team Board — Aufgabenverwaltung"
+  },
+  "description": {
+    "short": "Team-Aufgaben auf einen Blick",
+    "full": "Kanban-Board für das Team: Aufgaben verwalten, Abwesenheiten tracken, Standups dokumentieren."
+  },
+  "icons": {
+    "color": "icon-color.png",
+    "outline": "icon-outline.png"
+  },
+  "accentColor": "#00b4a0",
+  "staticTabs": [
+    {
+      "entityId": "board",
+      "name": "Board",
+      "contentUrl": "https://REPLACE-WITH-YOUR-DOMAIN/",
+      "websiteUrl": "https://REPLACE-WITH-YOUR-DOMAIN/",
+      "scopes": ["personal", "team"]
+    },
+    {
+      "entityId": "absences",
+      "name": "Abwesenheiten",
+      "contentUrl": "https://REPLACE-WITH-YOUR-DOMAIN/absences",
+      "websiteUrl": "https://REPLACE-WITH-YOUR-DOMAIN/absences",
+      "scopes": ["personal", "team"]
+    },
+    {
+      "entityId": "standups",
+      "name": "Standups",
+      "contentUrl": "https://REPLACE-WITH-YOUR-DOMAIN/standups",
+      "websiteUrl": "https://REPLACE-WITH-YOUR-DOMAIN/standups",
+      "scopes": ["personal", "team"]
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": [
+    "REPLACE-WITH-YOUR-DOMAIN"
+  ]
+}

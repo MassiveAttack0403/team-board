@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0] — 2026-08-19
+
+### Added
+- **Priorität-Chip**: roter "HOCH"-Chip auf der Task-Karte (statt Dot), rote linke Randlinie
+- **Fälligkeitsdatum** (`due_date`): neues Feld in DB (Migration idempotent mit `IF NOT EXISTS`), Task-Modal mit Datums-Input, farbkodierter Badge auf der Karte (überfällig/heute/bald/normal)
+- **Abwesenheitskalender** (`/absences`): 5-Wochen-Matrix, Zeilen = Mitarbeiter, Spalten = Werktage, klebende linke Spalte, Farbkodierung nach Abwesenheitstyp, KW-Gruppierung im Header
+- **Teams-Tab-Manifest** (`teams-manifest/manifest.json`): statische Tabs Board/Abwesenheiten/Standups, kein Code-Deployment nötig — nur Manifest als ZIP in Teams hochladen
+- Nav-Link "Kalender" im Board-Header
+
+### Changed
+- Task-Karte: `flex-direction: column` — Priorität + Titel in Top-Row, Due-Badge darunter
+- `tasks.js` PATCH: `hasOwnProperty`-Check für `due_date` erlaubt explizites Löschen (null) ohne andere Felder anzufassen
+
 ## [0.3.2] — 2026-08-18
 
 ### Fixed

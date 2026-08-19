@@ -239,10 +239,16 @@ nav a:hover {
   line-height: 1.45;
   transition: box-shadow 0.15s, transform 0.12s, border-color 0.15s;
   display: flex;
-  align-items: flex-start;
-  gap: 5px;
+  flex-direction: column;
+  gap: 4px;
   word-break: break-word;
   position: relative;
+}
+
+.task-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
 }
 
 .task-card:hover {
@@ -269,14 +275,18 @@ nav a:hover {
   color: var(--slate);
 }
 
-.priority-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #ef4444;
+.priority-chip {
+  font-size: 0.54rem;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 3px;
+  padding: 1px 4px;
   flex-shrink: 0;
-  margin-top: 5px;
-  box-shadow: 0 0 0 2px rgba(239,68,68,0.2);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  margin-top: 1px;
 }
 
 .task-notes-dot {
@@ -601,6 +611,169 @@ nav a:hover {
   justify-content: space-between;
   padding: 5px 10px;
   border-radius: 6px;
+}
+
+/* ── Due date badge ── */
+.due-badge {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  align-self: flex-start;
+  letter-spacing: 0.01em;
+}
+
+.due-overdue { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.due-today   { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+.due-soon    { background: #fef9c3; color: #92400e; border: 1px solid #fde68a; }
+.due-normal  { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+
+/* ── Modal due-date field ── */
+.modal-due-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.modal-due-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.modal-due-input {
+  padding: 6px 10px !important;
+  font-size: 0.82rem !important;
+}
+
+/* ── Absence calendar ── */
+.cal-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cal-scroll {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.cal-table {
+  border-collapse: collapse;
+  min-width: 100%;
+  font-size: 0.78rem;
+}
+
+.cal-table th, .cal-table td {
+  border: 1px solid #f0f4f8;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.cal-name-col {
+  min-width: 150px;
+  position: sticky;
+  left: 0;
+  background: var(--surface);
+  z-index: 2;
+  border-right: 2px solid var(--border) !important;
+}
+
+.cal-week-header {
+  background: #f8fafc;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 4px 8px;
+  border-bottom: 2px solid var(--border) !important;
+  letter-spacing: 0.04em;
+}
+
+.cal-day-header {
+  text-align: center;
+  padding: 4px 6px;
+  background: #fafcff;
+  min-width: 44px;
+}
+
+.cal-day-header.cal-today {
+  background: rgba(0,180,160,0.08);
+  color: var(--teal-dark);
+}
+
+.cal-day-header.cal-past {
+  opacity: 0.5;
+}
+
+.cal-day-name {
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.cal-day-num {
+  font-size: 0.68rem;
+  color: var(--slate);
+  font-weight: 500;
+}
+
+.cal-name-cell {
+  padding: 6px 12px;
+  font-weight: 500;
+  color: var(--slate);
+  font-size: 0.8rem;
+  position: sticky;
+  left: 0;
+  background: var(--surface);
+  z-index: 1;
+  border-right: 2px solid var(--border) !important;
+}
+
+.cal-row:hover .cal-name-cell,
+.cal-row:hover .cal-cell {
+  background-color: #f8fafc;
+}
+
+.cal-row:hover .cal-cell.cal-absent {
+  filter: brightness(0.97);
+}
+
+.cal-cell {
+  height: 32px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: default;
+}
+
+.cal-cell.cal-today {
+  outline: 2px solid rgba(0,180,160,0.35);
+  outline-offset: -2px;
+}
+
+.cal-cell.cal-past {
+  opacity: 0.6;
+}
+
+.cal-legend {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cal-legend-item {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
 }
 
 /* ── Standup page ── */

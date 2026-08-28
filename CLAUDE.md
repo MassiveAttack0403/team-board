@@ -16,6 +16,14 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 - Kein Framework-Overkill — dieses Tool muss von echten Menschen täglich benutzt werden
 - Performance-Regression bei jedem Feature mitprüfen
 
+## Skills — wann welcher
+
+| Situation | Tool/Skill |
+|---|---|
+| Code-Review vor PR | `Skill("code-review")` |
+| Charts / Dashboards | `Skill("dataviz")` |
+| Security-Check | `Skill("security-review")` |
+
 ## Stack
 - **Frontend**: React 18 + @hello-pangea/dnd + Vite (Port 5173)
 - **Backend**: Node.js 22 / Express (Port 3001)

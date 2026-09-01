@@ -1,4 +1,4 @@
-// Version: 0.6.1
+// Version: 0.7.0
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
@@ -229,29 +229,61 @@ export default function PlanCalendar() {
                   </tr>
                 </thead>
                 <tbody>
-                  {members.map((m, rowIdx) => (
-                    <tr key={m.id} className={`plan-row${rowIdx % 2 === 1 ? ' plan-row-alt' : ''}`}>
-                      <td className="plan-name-td">{m.name}</td>
-                      {allDates.map((d, i) => {
-                        const dateStr = ds(d);
-                        const entry = entries[`${m.id}:${dateStr}`];
-                        const ti = entry ? TYPE_MAP[entry.type] : null;
-                        const cellText = entry?.label || (ti?.code || null);
-                        const isHol = AT_HOLIDAYS.has(dateStr);
-                        return (
-                          <td
-                            key={i}
-                            className={cls(d, i, `plan-cell${isToday(d) ? ' plan-today' : ''}`)}
-                            style={(!isHol && !isWE(d) && ti) ? { background: ti.bg, color: ti.fg } : undefined}
-                            title={isHol ? 'Feiertag' : ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
-                            onClick={isHol ? undefined : e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
-                          >
-                            {cellText ? <span className="plan-cell-text">{cellText}</span> : null}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
+                  {members.map((m, rowIdx) => {
+                    // Group consecutive same-type+label cells into segments for colspan rendering.
+                    // Break at: holiday, empty cell, month boundary (fd1.length), type or label change.
+                    const segs = [];
+                    let idx = 0;
+                    while (idx < allDates.length) {
+                      const d = allDates[idx];
+                      const dstr = ds(d);
+                      const isHol = AT_HOLIDAYS.has(dstr);
+                      const entry = entries[`${m.id}:${dstr}`];
+                      if (isHol || !entry) {
+                        segs.push({ startIdx: idx, dates: [d], entry: null });
+                        idx++;
+                      } else {
+                        let end = idx + 1;
+                        while (end < allDates.length && end !== fd1.length) {
+                          const d2 = allDates[end];
+                          const dstr2 = ds(d2);
+                          if (AT_HOLIDAYS.has(dstr2)) break;
+                          const e2 = entries[`${m.id}:${dstr2}`];
+                          if (!e2 || e2.type !== entry.type || (e2.label || '') !== (entry.label || '')) break;
+                          end++;
+                        }
+                        segs.push({ startIdx: idx, dates: allDates.slice(idx, end), entry });
+                        idx = end;
+                      }
+                    }
+                    return (
+                      <tr key={m.id} className={`plan-row${rowIdx % 2 === 1 ? ' plan-row-alt' : ''}`}>
+                        <td className="plan-name-td">{m.name}</td>
+                        {segs.map((seg, si) => {
+                          const d = seg.dates[0];
+                          const i = seg.startIdx;
+                          const dateStr = ds(d);
+                          const entry = seg.entry;
+                          const ti = entry ? TYPE_MAP[entry.type] : null;
+                          const isHol = AT_HOLIDAYS.has(dateStr);
+                          const todayInSeg = seg.dates.some(dd => isToday(dd));
+                          const cellText = entry?.label || (ti?.code || null);
+                          return (
+                            <td
+                              key={si}
+                              colSpan={seg.dates.length > 1 ? seg.dates.length : undefined}
+                              className={cls(d, i, `plan-cell${todayInSeg ? ' plan-today' : ''}`)}
+                              style={(!isHol && !isWE(d) && ti) ? { background: ti.bg, color: ti.fg } : undefined}
+                              title={isHol ? 'Feiertag' : ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
+                              onClick={isHol ? undefined : e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
+                            >
+                              {cellText ? <span className="plan-cell-text">{cellText}</span> : null}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

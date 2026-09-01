@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.0] — 2026-09-01
+
+### Changed
+- **Plan-Kalender**: Multi-Tag-Blöcke werden als zusammengeführte Zelle (`colspan`) dargestellt — Beschreibungstext spannt über alle Tage des Blocks wie in Excel (`PlanCalendar.jsx` v0.7.0)
+- `plan-cell-text`: `max-width: 24px` → `max-width: 100%` — Text nutzt jetzt die volle Breite des zusammengeführten Blocks
+
 ## [0.9.0] — 2026-09-01
 
 ### Fixed

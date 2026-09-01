@@ -1053,7 +1053,7 @@ nav a.nav-active {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 24px;
+  max-width: 100%;
   display: block;
   line-height: 1.1;
   letter-spacing: -0.02em;

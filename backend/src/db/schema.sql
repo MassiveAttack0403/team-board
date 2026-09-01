@@ -1,4 +1,4 @@
--- Team Board Schema v0.2.0
+-- Team Board Schema v0.2.1
 
 CREATE TABLE IF NOT EXISTS members (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,4 +56,10 @@ CREATE TABLE IF NOT EXISTS plan_entries (
   type        TEXT NOT NULL,             -- see PLAN_TYPES in PlanCalendar.jsx
   label       TEXT,                      -- optional project/event text
   UNIQUE(member_id, date)
+);
+
+CREATE TABLE IF NOT EXISTS holiday_entries (
+  id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  date  TEXT NOT NULL UNIQUE,
+  label TEXT NOT NULL
 );

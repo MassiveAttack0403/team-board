@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.6.0] — 2026-09-01
+
+### Added
+- **Plan-Kalender v0.4.0**: 2-Monats-Blöcke untereinander statt 6-Monats-Horizontal-Scrolltabelle
+- Jahres-Tabs für Geschäftsjahre 2024/25, 2025/26, 2026/27 (Okt–Sep)
+- Ferien-Zeile in jedem 2-Monats-Block (österreichische Schulferien aus CSV)
+- Monatstrennlinie zwischen den zwei Monaten in jedem Block (`.plan-month-boundary`)
+- `holiday_entries`-Tabelle in DB (`schema.sql` v0.2.1)
+- `GET /api/plan/holidays` Endpoint (`plan.js` v0.2.0)
+- `getHolidays` in `client.js` (v0.4.0)
+- CSV-Import-Script (`import-plan-csv.js` v0.1.0): liest Windows-1252-CSVs, importiert Ferien + Plan-Einträge
+  - `npm run import-plan` (in backend/)
+  - `npm run import-plan -- --dry-run` für Vorschau ohne DB-Schreibzugriff
+- CSS: Jahr-Tab-Leiste (`.plan-year-tabs`), Block-Wrapper (`.plan-block`), Ferien-Zellen (`.plan-th-ferien`, `.plan-ferien-cell`, `.plan-ferien-text`), Monatstrennlinie (`.plan-month-boundary`), zweiter Monats-Header (`.plan-th-month-r`)
+- Sticky-Top-Header entfernt (kein globales sticky top auf Kopfzeilen — kollidiert bei gestapelten Blöcken); nur Name-Spalte bleibt sticky-left
+
 ## [0.5.2] — 2026-08-19
 
 ### Changed

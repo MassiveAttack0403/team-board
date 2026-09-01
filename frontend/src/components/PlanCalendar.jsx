@@ -1,7 +1,7 @@
-// Version: 0.3.0
-import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { getMembers, getPlan, setPlanEntry, deletePlanEntry } from '../api/client';
-import { startOfMonth, endOfMonth, addMonths, addDays, format, getISOWeek, isToday } from 'date-fns';
+// Version: 0.4.0
+import React, { useEffect, useState, useRef } from 'react';
+import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
+import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
 
 const PLAN_TYPES = [
   { key: 'consulting_blocked', label: 'Consulting geblockt',     bg: '#1e3a8a', fg: '#fff' },
@@ -20,63 +20,55 @@ const PLAN_TYPES = [
 
 const TYPE_MAP = Object.fromEntries(PLAN_TYPES.map(t => [t.key, t]));
 const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
-const MONTH_NAMES = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
-const NUM_MONTHS = 6;
+const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const FISCAL_YEARS = [2024, 2025, 2026];
+
+// Oct–Nov, Dec–Jan, Feb–Mar, Apr–May, Jun–Jul, Aug–Sep
+const BLOCK_DEFS = [[9,10],[11,0],[1,2],[3,4],[5,6],[7,8]];
 
 function ds(d) { return format(d, 'yyyy-MM-dd'); }
 function isWE(d) { const w = d.getDay(); return w === 0 || w === 6; }
 
-function genDates(base) {
-  const start = startOfMonth(base);
-  const end = endOfMonth(addMonths(start, NUM_MONTHS - 1));
+function monthDates(year, month) {
+  const end = endOfMonth(new Date(year, month, 1));
   const out = [];
-  let d = new Date(start);
+  let d = new Date(year, month, 1);
   while (d <= end) { out.push(new Date(d)); d = addDays(d, 1); }
   return out;
 }
 
-function monthGroups(dates) {
+function kwGroups(dates) {
   const groups = [];
   let cur = null;
   for (const d of dates) {
-    const key = d.getFullYear() * 12 + d.getMonth();
-    if (!cur || cur.key !== key) {
-      cur = { key, label: `${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`, days: [] };
-      groups.push(cur);
-    }
+    const key = `${d.getFullYear()}-${getISOWeek(d)}`;
+    if (!cur || cur.key !== key) { cur = { key, number: getISOWeek(d), days: [] }; groups.push(cur); }
     cur.days.push(d);
   }
   return groups;
 }
 
-function weekGroups(dates) {
-  const groups = [];
-  let cur = null;
-  for (const d of dates) {
-    const yr = d.getFullYear();
-    const wk = getISOWeek(d);
-    const key = `${yr}-${wk}`;
-    if (!cur || cur.key !== key) {
-      cur = { key, number: wk, days: [] };
-      groups.push(cur);
-    }
-    cur.days.push(d);
-  }
-  return groups;
+function getBlockData(fiscalYear, [m1, m2]) {
+  const y1 = m1 >= 9 ? fiscalYear : fiscalYear + 1;
+  const y2 = m2 >= 9 ? fiscalYear : fiscalYear + 1;
+  const dates1 = monthDates(y1, m1);
+  const dates2 = monthDates(y2, m2);
+  return { dates1, dates2, y1, y2, m1, m2, allDates: [...dates1, ...dates2] };
 }
 
 export default function PlanCalendar() {
+  const [fiscalYear, setFiscalYear] = useState(() => {
+    const now = new Date();
+    return now.getMonth() >= 9 ? now.getFullYear() : now.getFullYear() - 1;
+  });
   const [members, setMembers] = useState([]);
   const [entries, setEntries] = useState({});
-  const [base, setBase] = useState(() => startOfMonth(new Date()));
+  const [holidays, setHolidays] = useState({});
   const [popover, setPopover] = useState(null);
   const popRef = useRef(null);
 
-  const dates   = useMemo(() => genDates(base), [base]);
-  const mGroups = useMemo(() => monthGroups(dates), [dates]);
-  const wGroups = useMemo(() => weekGroups(dates), [dates]);
-  const fromStr = useMemo(() => ds(dates[0]), [dates]);
-  const toStr   = useMemo(() => ds(dates[dates.length - 1]), [dates]);
+  const fromStr = `${fiscalYear}-10-01`;
+  const toStr   = `${fiscalYear + 1}-09-30`;
 
   useEffect(() => { getMembers().then(setMembers); }, []);
 
@@ -85,6 +77,11 @@ export default function PlanCalendar() {
       const map = {};
       for (const r of rows) map[`${r.member_id}:${r.date}`] = { type: r.type, label: r.label || '' };
       setEntries(map);
+    });
+    getHolidays(fromStr, toStr).then(rows => {
+      const map = {};
+      for (const r of rows) map[r.date] = r.label;
+      setHolidays(map);
     });
   }, [fromStr, toStr]);
 
@@ -120,75 +117,105 @@ export default function PlanCalendar() {
     setPopover(null);
   };
 
-  const endBase = addMonths(base, NUM_MONTHS - 1);
-  const rangeLabel = `${MONTH_NAMES[base.getMonth()]} ${base.getFullYear()} – ${MONTH_NAMES[endBase.getMonth()]} ${endBase.getFullYear()}`;
-
   return (
     <div className="plan-wrap">
+      <div className="plan-year-tabs">
+        {FISCAL_YEARS.map(fy => (
+          <button
+            key={fy}
+            className={`plan-year-tab${fiscalYear === fy ? ' active' : ''}`}
+            onClick={() => setFiscalYear(fy)}
+          >
+            {fy}/{String(fy + 1).slice(2)}
+          </button>
+        ))}
+      </div>
+
       <div className="plan-legend">
         {PLAN_TYPES.map(t => (
           <span key={t.key} className="plan-legend-chip" style={{ background: t.bg, color: t.fg }}>{t.label}</span>
         ))}
       </div>
 
-      <div className="board-toolbar">
-        <button className="btn-header" onClick={() => setBase(m => addMonths(m, -1))}>‹ zurück</button>
-        <span className="week-label">{rangeLabel}</span>
-        <button className="btn-header" onClick={() => setBase(m => addMonths(m, 1))}>weiter ›</button>
-        <button className="btn-header" style={{ marginLeft: 'auto' }} onClick={() => setBase(startOfMonth(new Date()))}>Heute</button>
-      </div>
-
       <div className="plan-scroll">
-        <table className="plan-table">
-          <thead>
-            <tr>
-              <th className="plan-name-th plan-th-month">Name</th>
-              {mGroups.map(g => (
-                <th key={g.key} colSpan={g.days.length} className="plan-th-month">{g.label}</th>
-              ))}
-            </tr>
-            <tr>
-              <th className="plan-name-th plan-th-kw" />
-              {wGroups.map(g => (
-                <th key={g.key} colSpan={g.days.length} className="plan-th-kw">KW {g.number}</th>
-              ))}
-            </tr>
-            <tr>
-              <th className="plan-name-th plan-th-wd" />
-              {dates.map((d, i) => (
-                <th key={i} className={`plan-th-wd${isWE(d) ? ' plan-we' : ''}`}>{WD[d.getDay()]}</th>
-              ))}
-            </tr>
-            <tr>
-              <th className="plan-name-th plan-th-day" />
-              {dates.map((d, i) => (
-                <th key={i} className={`plan-th-day${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today-header' : ''}`}>{d.getDate()}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {members.map(m => (
-              <tr key={m.id} className="plan-row">
-                <td className="plan-name-td">{m.name}</td>
-                {dates.map((d, i) => {
-                  const dateStr = ds(d);
-                  const entry = entries[`${m.id}:${dateStr}`];
-                  const ti = entry ? TYPE_MAP[entry.type] : null;
-                  return (
-                    <td
-                      key={i}
-                      className={`plan-cell${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today' : ''}`}
-                      style={ti ? { background: ti.bg, color: ti.fg } : undefined}
-                      title={ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
-                      onClick={e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
-                    />
+        {BLOCK_DEFS.map((blockDef, blockIdx) => {
+          const { dates1, dates2, y1, y2, m1, m2, allDates } = getBlockData(fiscalYear, blockDef);
+          const kws = kwGroups(allDates);
 
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          return (
+            <div key={blockIdx} className="plan-block">
+              <table className="plan-table">
+                <thead>
+                  <tr>
+                    <th className="plan-name-th plan-th-month">Name</th>
+                    <th colSpan={dates1.length} className="plan-th-month">
+                      {MONTH_NAMES[m1]} {y1}
+                    </th>
+                    <th colSpan={dates2.length} className="plan-th-month plan-th-month-r">
+                      {MONTH_NAMES[m2]} {y2}
+                    </th>
+                  </tr>
+                  <tr>
+                    <th className="plan-name-th plan-th-kw" />
+                    {kws.map(g => (
+                      <th key={g.key} colSpan={g.days.length} className="plan-th-kw">KW {g.number}</th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="plan-name-th plan-th-wd" />
+                    {allDates.map((d, i) => (
+                      <th key={i} className={`plan-th-wd${isWE(d) ? ' plan-we' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`}>
+                        {WD[d.getDay()]}
+                      </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="plan-name-th plan-th-day" />
+                    {allDates.map((d, i) => (
+                      <th key={i} className={`plan-th-day${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today-header' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`}>
+                        {d.getDate()}
+                      </th>
+                    ))}
+                  </tr>
+                  <tr>
+                    <th className="plan-name-th plan-th-ferien">Ferien</th>
+                    {allDates.map((d, i) => {
+                      const hol = holidays[ds(d)];
+                      return (
+                        <th key={i} className={`plan-ferien-cell${isWE(d) ? ' plan-we' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`} title={hol || ''}>
+                          {hol ? <span className="plan-ferien-text">{hol}</span> : null}
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {members.map(m => (
+                    <tr key={m.id} className="plan-row">
+                      <td className="plan-name-td">{m.name}</td>
+                      {allDates.map((d, i) => {
+                        const dateStr = ds(d);
+                        const entry = entries[`${m.id}:${dateStr}`];
+                        const ti = entry ? TYPE_MAP[entry.type] : null;
+                        return (
+                          <td
+                            key={i}
+                            className={`plan-cell${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`}
+                            style={ti ? { background: ti.bg, color: ti.fg } : undefined}
+                            title={ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
+                            onClick={e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
+                          >
+                            {entry?.label ? <span className="plan-cell-text">{entry.label}</span> : null}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })}
       </div>
 
       {popover && (

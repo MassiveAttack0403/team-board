@@ -1,12 +1,13 @@
 {
   "name": "team-board-backend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Team Board – API Server",
   "main": "src/index.js",
   "scripts": {
     "start": "node --experimental-sqlite src/index.js",
     "dev": "node --experimental-sqlite --watch src/index.js",
-    "seed": "node --experimental-sqlite src/db/seed.js"
+    "seed": "node --experimental-sqlite src/db/seed.js",
+    "import-plan": "node --experimental-sqlite src/db/import-plan-csv.js"
   },
   "dependencies": {
     "express": "^4.19.2",

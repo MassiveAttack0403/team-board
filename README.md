@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 0.5.2
+## Version: 0.6.0
 
 ## Features
 
@@ -11,7 +11,7 @@ Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 - Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
 - Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
-- **Plan-Kalender** (`/plan`): 6-Monats-Consultingplan mit 12 editierbaren Kategorietypen (Consulting, Reise, Schulung, Urlaub/ZA, Home Office, …), Klick zum Bearbeiten, Projekttext-Feld
+- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 6×2-Monats-Blöcke untereinander, 12 Kategorietypen, Ferien-Zeile, CSV-Import
 - Team verwalten: Mitarbeiter hinzufügen / entfernen
 - Standup-Zusammenfassungen (Copilot-Text + Teams-Link speichern)
 - Grid-Layout (umbrechen statt horizontal scrollen)
@@ -47,6 +47,16 @@ Dann: http://localhost:5173
 cd backend
 npm run seed
 ```
+
+## Plan-CSV importieren (Consultingplan aus Excel-Export)
+
+```cmd
+cd backend
+npm run import-plan              # importiert alle 3 CSVs (2024-25, 2025-26, 2026-27)
+npm run import-plan -- --dry-run # Vorschau ohne DB-Schreibzugriff
+```
+
+CSVs erwartet in `C:\INCOMING\Consultingplan(20xx-xx).csv` (Windows-1252-kodiert, Semikolon-getrennt).
 
 ## Teams-Tab einrichten
 

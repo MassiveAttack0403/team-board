@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 0.6.0
+## Version: 0.6.1
 
 ## Features
 
@@ -54,6 +54,9 @@ npm run seed
 cd backend
 npm run import-plan              # importiert alle 3 CSVs (2024-25, 2025-26, 2026-27)
 npm run import-plan -- --dry-run # Vorschau ohne DB-Schreibzugriff
+npm run fill-plan                # füllt leere Werktage aller Jahre mit consulting_blocked
+npm run fill-plan -- --dry-run  # Vorschau
+npm run fill-plan -- --year 2025 # nur ein Geschäftsjahr befüllen
 ```
 
 CSVs erwartet in `C:\INCOMING\Consultingplan(20xx-xx).csv` (Windows-1252-kodiert, Semikolon-getrennt).

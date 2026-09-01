@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1] — 2026-09-01
+
+### Added
+- `fill-plan-defaults.js` (v0.1.0): füllt alle Werktage aller 3 Geschäftsjahre mit `consulting_blocked` wo kein Eintrag existiert (`INSERT OR IGNORE`) — setzt den Excel-Default (dunkelblaue Zellen ohne Text) nach
+- `npm run fill-plan` (in backend/): 9203 neue Einträge, bestehende bleiben erhalten
+- `npm run fill-plan -- --dry-run` und `-- --year 2025` als Flags
+
 ## [0.6.0] — 2026-09-01
 
 ### Added

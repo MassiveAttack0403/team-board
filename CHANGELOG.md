@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0] — 2026-09-01
+
+### Added
+- **Partnering for Success** (`/partnering`): Statische Tabelle mit 34 Partnerunternehmen (23 done=grün, 11 ongoing=gelb); Filter-Buttons (Alle/Done/Ongoing), Spalten: Partner company, established, interval, language, Premium, ETM contact, Last meeting, Link protocol (`Partnering.jsx` v0.1.0)
+- **Stunden Statistik** (`/stunden`): Horizontales Stacked-Bar-Chart, KW30–KW33, 7 Kategorien (OA PS-GENERAL, PRESALES, PARTNERMGMT., COC ASSISTANCE, OA PS, EXTENDED SERVICES, URLAUB/ZA), statische Beispieldaten (`StundenStatistik.jsx` v0.1.0)
+- **SR Statistik** (`/sr`): Platzhalter-Seite "Power BI Daten von Rainer" (`SrStatistik.jsx` v0.1.0)
+- 3 neue Nav-Links in App.jsx (Partnering, Stunden, SR Statistik)
+- CSS für alle 3 neuen Seiten in `index.css`
+
+### Changed
+- **Plan-Kalender** v0.7.1: Zelltext auf max. 10 Zeichen gekürzt, Rest als tooltip
+- Monats-Header (`plan-th-month`): `0.68rem` → `0.88rem`, Padding erhöht
+- KW-Header (`plan-th-kw`): `0.62rem` → `0.78rem`, font-weight `700`
+- `App.jsx` v0.4.0 → v0.5.0: 3 neue Routen + Imports
+
 ## [1.0.0] — 2026-09-01
 
 ### Changed

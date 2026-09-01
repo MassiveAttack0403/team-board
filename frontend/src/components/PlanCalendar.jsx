@@ -1,4 +1,4 @@
-// Version: 0.7.0
+// Version: 0.7.1
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
@@ -267,7 +267,8 @@ export default function PlanCalendar() {
                           const ti = entry ? TYPE_MAP[entry.type] : null;
                           const isHol = AT_HOLIDAYS.has(dateStr);
                           const todayInSeg = seg.dates.some(dd => isToday(dd));
-                          const cellText = entry?.label || (ti?.code || null);
+                          const fullText = entry?.label || (ti?.code || null);
+                          const cellText = fullText && fullText.length > 10 ? fullText.slice(0, 10) + '…' : fullText;
                           return (
                             <td
                               key={si}

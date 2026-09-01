@@ -978,17 +978,17 @@ nav a.nav-active {
   position: sticky;
   left: 0;
   z-index: 4;
-  background: #0f172a;
-  color: rgba(255,255,255,0.5);
+  background: #e2e8f0;
+  color: #64748b;
   font-size: 0.58rem;
   font-weight: 600;
   text-align: left;
   padding: 0 6px;
-  border-right: 2px solid rgba(255,255,255,0.12) !important;
+  border-right: 2px solid #cbd5e1 !important;
 }
 
 .plan-ferien-cell {
-  background: #0f172a;
+  background: #f1f5f9;
   height: 18px;
   max-width: 24px;
   overflow: visible;
@@ -1001,8 +1001,8 @@ nav a.nav-active {
   left: 2px;
   white-space: nowrap;
   font-size: 0.56rem;
-  font-weight: 600;
-  color: #fbbf24;
+  font-weight: 700;
+  color: #0369a1;
   pointer-events: none;
   z-index: 1;
 }

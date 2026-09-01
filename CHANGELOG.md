@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.0] — 2026-09-01
+
+### Fixed
+- **Plan-Kalender**: Ferien-Zeile nicht mehr schwarz — `#0f172a` ersetzt durch helles Grau (`#e2e8f0` Label, `#f1f5f9` Zellen) für korrekte Lesbarkeit; Ferien-Text bleibt hervorgehoben (blau statt gelb auf schwarz)
+- `PlanCalendar.jsx` v0.6.1, `index.css` Ferien-Styling korrigiert
+
 ## [0.8.0] — 2026-09-01
 
 ### Changed

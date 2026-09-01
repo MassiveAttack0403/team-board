@@ -1,4 +1,4 @@
-// Version: 0.6.0
+// Version: 0.6.1
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';

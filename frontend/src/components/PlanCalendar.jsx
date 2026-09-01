@@ -1,4 +1,4 @@
-// Version: 0.7.1
+// Version: 0.8.0
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
@@ -39,7 +39,8 @@ const TYPE_MAP = Object.fromEntries(PLAN_TYPES.map(t => [t.key, t]));
 const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const FISCAL_YEARS = [2024, 2025, 2026];
-const BLOCK_DEFS = [[9,10],[11,0],[1,2],[3,4],[5,6],[7,8]];
+// One month per block, fiscal year order Oct–Sep
+const BLOCK_DEFS = [9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 function ds(d) { return format(d, 'yyyy-MM-dd'); }
 function isWE(d) { const w = d.getDay(); return w === 0 || w === 6; }
@@ -74,10 +75,9 @@ function kwBoundarySet(dates) {
   return set;
 }
 
-function getBlockData(fiscalYear, [m1, m2]) {
-  const y1 = m1 >= 9 ? fiscalYear : fiscalYear + 1;
-  const y2 = m2 >= 9 ? fiscalYear : fiscalYear + 1;
-  return { dates1: monthDates(y1, m1), dates2: monthDates(y2, m2), y1, y2, m1, m2 };
+function getBlockData(fiscalYear, month) {
+  const year = month >= 9 ? fiscalYear : fiscalYear + 1;
+  return { dates: monthDates(year, month), year, month };
 }
 
 export default function PlanCalendar() {
@@ -91,6 +91,8 @@ export default function PlanCalendar() {
   const [holidays, setHolidays] = useState({});
   const [popover, setPopover] = useState(null);
   const popRef = useRef(null);
+  const todayBlockRef = useRef(null);
+  const now = new Date();
 
   const fromStr = `${fiscalYear}-10-01`;
   const toStr   = `${fiscalYear + 1}-09-30`;
@@ -109,6 +111,13 @@ export default function PlanCalendar() {
       setHolidays(map);
     });
   }, [fromStr, toStr]);
+
+  // Auto-scroll to today's month block after members load or fiscal year changes
+  useEffect(() => {
+    if (todayBlockRef.current && members.length > 0) {
+      todayBlockRef.current.scrollIntoView({ block: 'start' });
+    }
+  }, [members.length, fiscalYear]);
 
   useEffect(() => {
     if (!popover) return;
@@ -171,11 +180,10 @@ export default function PlanCalendar() {
       </div>
 
       <div className="plan-scroll">
-        {BLOCK_DEFS.map((blockDef, blockIdx) => {
-          const { dates1, dates2, y1, y2, m1, m2 } = getBlockData(fiscalYear, blockDef);
-          const fd1 = hideWeekends ? dates1.filter(d => !isWE(d)) : dates1;
-          const fd2 = hideWeekends ? dates2.filter(d => !isWE(d)) : dates2;
-          const allDates = [...fd1, ...fd2];
+        {BLOCK_DEFS.map((blockMonth, blockIdx) => {
+          const { dates, year, month } = getBlockData(fiscalYear, blockMonth);
+          const isTodayBlock = year === now.getFullYear() && month === now.getMonth();
+          const allDates = hideWeekends ? dates.filter(d => !isWE(d)) : dates;
           const kws = kwGroups(allDates);
           const kwBounds = kwBoundarySet(allDates);
 
@@ -184,19 +192,23 @@ export default function PlanCalendar() {
             const dstr = ds(d);
             if (AT_HOLIDAYS.has(dstr)) c += ' plan-holiday';
             else if (isWE(d)) c += ' plan-we';
-            if (i === fd1.length) c += ' plan-month-boundary';
-            else if (kwBounds.has(i) && i > 0) c += ' plan-kw-boundary';
+            if (kwBounds.has(i) && i > 0) c += ' plan-kw-boundary';
             return c.trim();
           };
 
           return (
-            <div key={blockIdx} className="plan-block">
+            <div
+              key={blockIdx}
+              className="plan-block"
+              ref={isTodayBlock ? todayBlockRef : null}
+            >
               <table className="plan-table">
                 <thead>
                   <tr>
                     <th className="plan-name-th plan-th-month">Name</th>
-                    <th colSpan={fd1.length} className="plan-th-month">{MONTH_NAMES[m1]} {y1}</th>
-                    <th colSpan={fd2.length} className="plan-th-month plan-th-month-r">{MONTH_NAMES[m2]} {y2}</th>
+                    <th colSpan={allDates.length} className="plan-th-month">
+                      {MONTH_NAMES[month]} {year}
+                    </th>
                   </tr>
                   <tr>
                     <th className="plan-name-th plan-th-kw" />
@@ -213,7 +225,12 @@ export default function PlanCalendar() {
                   <tr>
                     <th className="plan-name-th plan-th-day" />
                     {allDates.map((d, i) => (
-                      <th key={i} className={cls(d, i, `plan-th-day${isToday(d) ? ' plan-today-header' : ''}`)}>{d.getDate()}</th>
+                      <th
+                        key={i}
+                        className={cls(d, i, `plan-th-day${isToday(d) ? ' plan-today-header' : ''}`)}
+                      >
+                        {d.getDate()}
+                      </th>
                     ))}
                   </tr>
                   <tr>
@@ -230,8 +247,7 @@ export default function PlanCalendar() {
                 </thead>
                 <tbody>
                   {members.map((m, rowIdx) => {
-                    // Group consecutive same-type+label cells into segments for colspan rendering.
-                    // Break at: holiday, empty cell, month boundary (fd1.length), type or label change.
+                    // Consecutive same-type+label cells → colspan segment
                     const segs = [];
                     let idx = 0;
                     while (idx < allDates.length) {
@@ -244,7 +260,7 @@ export default function PlanCalendar() {
                         idx++;
                       } else {
                         let end = idx + 1;
-                        while (end < allDates.length && end !== fd1.length) {
+                        while (end < allDates.length) {
                           const d2 = allDates[end];
                           const dstr2 = ds(d2);
                           if (AT_HOLIDAYS.has(dstr2)) break;
@@ -267,8 +283,7 @@ export default function PlanCalendar() {
                           const ti = entry ? TYPE_MAP[entry.type] : null;
                           const isHol = AT_HOLIDAYS.has(dateStr);
                           const todayInSeg = seg.dates.some(dd => isToday(dd));
-                          const fullText = entry?.label || (ti?.code || null);
-                          const cellText = fullText && fullText.length > 10 ? fullText.slice(0, 10) + '…' : fullText;
+                          const displayText = entry?.label || (ti?.code || null);
                           return (
                             <td
                               key={si}
@@ -278,7 +293,7 @@ export default function PlanCalendar() {
                               title={isHol ? 'Feiertag' : ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
                               onClick={isHol ? undefined : e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
                             >
-                              {cellText ? <span className="plan-cell-text">{cellText}</span> : null}
+                              {displayText ? <span className="plan-cell-text">{displayText}</span> : null}
                             </td>
                           );
                         })}

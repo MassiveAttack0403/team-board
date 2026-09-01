@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 1.1.0
+## Version: 1.2.0
 
 ## Features
 
@@ -11,7 +11,7 @@ Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 - Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
 - Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
-- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 6×2-Monats-Blöcke untereinander, 12 Kategorietypen, Ferien-Zeile, CSV-Import; Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau; Multi-Tag-Blöcke als colspan (Text spannt über alle Tage); Zelltext max. 10 Zeichen mit Tooltip
+- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 12 einzelne Monatsblöcke untereinander (ein Monat pro Tabelle), 12 Kategorietypen, Ferien-Zeile, CSV-Import; Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau; Multi-Tag-Blöcke als colspan; Auto-Scroll auf heute beim Laden; amber Heute-Marker
 - **Partnering for Success** (`/partnering`): Tabelle mit 34 Partnerunternehmen, farbkodiert nach Status (done=grün / ongoing=gelb), Filter-Buttons
 - **Stunden Statistik** (`/stunden`): Horizontales Stacked-Bar-Chart, KW30–KW33, 7 Buchungskategorien
 - **SR Statistik** (`/sr`): Platzhalter für Power BI-Integration (Daten von Rainer)
@@ -49,6 +49,9 @@ Dann: http://localhost:5173
 ```cmd
 cd backend
 npm run seed
+
+# Aug–Sep 2026 Daten aus Whiteboard neu laden
+npm run seed-aug-sep
 ```
 
 ## Plan-CSV importieren (Consultingplan aus Excel-Export)

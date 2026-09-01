@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.0] — 2026-09-01
+
+### Changed
+- **Plan-Kalender v0.8.0**: Ein-Monats-Ansicht statt 2-Monats-Blöcke — jeder Monat hat eine eigene Tabelle, Zellen einheitlich 42×42px (war 32×36px)
+- Auto-Scroll auf heutigen Monat beim Laden der Seite (`scrollIntoView` auf ref des aktiven Monatsblocks)
+- Heute-Markierung im Tag-Header: amber `#f59e0b` statt teal (fetter, kontrastreicher); Datenzellen: amber `box-shadow: inset 0 0 0 3px` statt teal Outline
+- Kein JS-Truncation mehr — CSS `overflow: hidden; text-overflow: ellipsis` auf `.plan-cell-text` reicht aus; `displayText` gibt vollen Label-Text weiter
+- Monatsgrenz-Algorithmus entfernt (kein `fd1`/`fd2`-Split mehr nötig)
+- **Aug–Sep 2026 Seed-Daten** korrigiert nach Whiteboard-Bild: `seed-aug-sep.js` v0.1.0, 348 Einträge für 10 Mitarbeiter (Teamevent Sep 14–16, PIPE-Gruppe Sep 8–11, Franz CSW Sep 15–25, Jochen Rittmeyer Sep 15–18, Param Urlaub Aug 3–14, …)
+- `backend/package.json`: neues Script `seed-aug-sep`
+
 ## [1.1.0] — 2026-09-01
 
 ### Added

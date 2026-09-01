@@ -840,6 +840,24 @@ nav a.nav-active {
   background: rgba(0,180,160,0.08);
 }
 
+.plan-we-toggle {
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--slate);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.plan-we-toggle.active {
+  background: #1e293b;
+  color: rgba(255,255,255,0.75);
+  border-color: #1e293b;
+}
+
 .plan-legend {
   display: flex;
   flex-wrap: wrap;
@@ -917,7 +935,7 @@ nav a.nav-active {
   padding: 4px 6px;
   letter-spacing: 0.03em;
   border-bottom: 1px solid rgba(255,255,255,0.12) !important;
-  min-width: 24px;
+  min-width: 26px;
 }
 
 .plan-th-month-r {
@@ -932,7 +950,7 @@ nav a.nav-active {
   text-align: center;
   padding: 3px 4px;
   border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-  min-width: 24px;
+  min-width: 26px;
 }
 
 .plan-th-wd {
@@ -942,7 +960,7 @@ nav a.nav-active {
   font-weight: 600;
   text-align: center;
   padding: 3px 4px;
-  min-width: 24px;
+  min-width: 26px;
 }
 
 .plan-th-day {
@@ -953,7 +971,7 @@ nav a.nav-active {
   text-align: center;
   padding: 3px 4px;
   border-bottom: 2px solid rgba(255,255,255,0.15) !important;
-  min-width: 24px;
+  min-width: 26px;
 }
 
 .plan-th-ferien {
@@ -997,6 +1015,18 @@ nav a.nav-active {
   border-left: 2px solid #94a3b8 !important;
 }
 
+.plan-kw-boundary:not(.plan-month-boundary) {
+  border-left: 1px solid rgba(255,255,255,0.18) !important;
+}
+
+.plan-table td.plan-kw-boundary:not(.plan-month-boundary) {
+  border-left: 1px solid rgba(100,116,139,0.35) !important;
+}
+
+.plan-row-alt .plan-name-td {
+  background: #f8fafc;
+}
+
 .plan-we {
   background: rgba(0,0,0,0.12) !important;
   color: rgba(255,255,255,0.35) !important;
@@ -1005,8 +1035,8 @@ nav a.nav-active {
 .plan-row:hover .plan-name-td { background: #f1f5f9; }
 
 .plan-cell {
-  height: 24px;
-  width: 24px;
+  height: 28px;
+  width: 26px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -1018,14 +1048,15 @@ nav a.nav-active {
 .plan-cell:hover { filter: brightness(0.88); outline: 2px solid rgba(0,180,160,0.5); outline-offset: -2px; }
 
 .plan-cell-text {
-  font-size: 0.56rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 22px;
+  max-width: 24px;
   display: block;
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .plan-popover {

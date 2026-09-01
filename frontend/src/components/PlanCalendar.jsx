@@ -1,29 +1,27 @@
-// Version: 0.4.0
+// Version: 0.5.0
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
 
 const PLAN_TYPES = [
-  { key: 'consulting_blocked', label: 'Consulting geblockt',     bg: '#1e3a8a', fg: '#fff' },
-  { key: 'consulting_ordered', label: 'Consulting bestellt',     bg: '#fef08a', fg: '#333' },
-  { key: 'planned_ice',        label: 'Verplant Eis',            bg: '#9333ea', fg: '#fff' },
-  { key: 'travel',             label: 'Reise',                   bg: '#86efac', fg: '#14532d' },
-  { key: 'training_blocked',   label: 'Schulung geblockt',       bg: '#f97316', fg: '#fff' },
-  { key: 'training_ordered',   label: 'Schulung bestellt (fix)', bg: '#16a34a', fg: '#fff' },
-  { key: 'vacation',           label: 'Urlaub / ZA',             bg: '#3b82f6', fg: '#fff' },
-  { key: 'home_office',        label: 'Home Office',             bg: '#fca5a5', fg: '#7f1d1d' },
-  { key: 'other_event',        label: 'Sonstiges Event',         bg: '#67e8f9', fg: '#0c4a6e' },
-  { key: 'no_travel',          label: 'keine Reise möglich',     bg: '#f472b6', fg: '#fff' },
-  { key: 'continue',           label: 'Weiter',                  bg: '#0f766e', fg: '#fff' },
-  { key: 'partner',            label: 'Partner',                 bg: '#c4b5fd', fg: '#4c1d95' },
+  { key: 'consulting_blocked', label: 'Consulting geblockt',     code: '',      bg: '#1e3a8a', fg: '#fff' },
+  { key: 'consulting_ordered', label: 'Consulting bestellt',     code: 'Best.', bg: '#fef08a', fg: '#333' },
+  { key: 'planned_ice',        label: 'Verplant Eis',            code: 'Eis',   bg: '#9333ea', fg: '#fff' },
+  { key: 'travel',             label: 'Reise',                   code: 'Reise', bg: '#86efac', fg: '#14532d' },
+  { key: 'training_blocked',   label: 'Schulung geblockt',       code: 'Sch.',  bg: '#f97316', fg: '#fff' },
+  { key: 'training_ordered',   label: 'Schulung bestellt (fix)', code: 'Sch!',  bg: '#16a34a', fg: '#fff' },
+  { key: 'vacation',           label: 'Urlaub / ZA',             code: 'URL',   bg: '#3b82f6', fg: '#fff' },
+  { key: 'home_office',        label: 'Home Office',             code: 'HO',    bg: '#fca5a5', fg: '#7f1d1d' },
+  { key: 'other_event',        label: 'Sonstiges Event',         code: 'Evt',   bg: '#67e8f9', fg: '#0c4a6e' },
+  { key: 'no_travel',          label: 'keine Reise möglich',     code: 'kR',    bg: '#f472b6', fg: '#fff' },
+  { key: 'continue',           label: 'Weiter',                  code: 'Wtr',   bg: '#0f766e', fg: '#fff' },
+  { key: 'partner',            label: 'Partner',                 code: 'Part',  bg: '#c4b5fd', fg: '#4c1d95' },
 ];
 
 const TYPE_MAP = Object.fromEntries(PLAN_TYPES.map(t => [t.key, t]));
 const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const FISCAL_YEARS = [2024, 2025, 2026];
-
-// Oct–Nov, Dec–Jan, Feb–Mar, Apr–May, Jun–Jul, Aug–Sep
 const BLOCK_DEFS = [[9,10],[11,0],[1,2],[3,4],[5,6],[7,8]];
 
 function ds(d) { return format(d, 'yyyy-MM-dd'); }
@@ -41,19 +39,28 @@ function kwGroups(dates) {
   const groups = [];
   let cur = null;
   for (const d of dates) {
-    const key = `${d.getFullYear()}-${getISOWeek(d)}`;
-    if (!cur || cur.key !== key) { cur = { key, number: getISOWeek(d), days: [] }; groups.push(cur); }
+    const kw = getISOWeek(d);
+    const key = `${d.getFullYear()}-${kw}`;
+    if (!cur || cur.key !== key) { cur = { key, number: kw, days: [] }; groups.push(cur); }
     cur.days.push(d);
   }
   return groups;
 }
 
+function kwBoundarySet(dates) {
+  const set = new Set();
+  let lastKey = null;
+  dates.forEach((d, i) => {
+    const key = `${d.getFullYear()}-${getISOWeek(d)}`;
+    if (key !== lastKey) { set.add(i); lastKey = key; }
+  });
+  return set;
+}
+
 function getBlockData(fiscalYear, [m1, m2]) {
   const y1 = m1 >= 9 ? fiscalYear : fiscalYear + 1;
   const y2 = m2 >= 9 ? fiscalYear : fiscalYear + 1;
-  const dates1 = monthDates(y1, m1);
-  const dates2 = monthDates(y2, m2);
-  return { dates1, dates2, y1, y2, m1, m2, allDates: [...dates1, ...dates2] };
+  return { dates1: monthDates(y1, m1), dates2: monthDates(y2, m2), y1, y2, m1, m2 };
 }
 
 export default function PlanCalendar() {
@@ -61,6 +68,7 @@ export default function PlanCalendar() {
     const now = new Date();
     return now.getMonth() >= 9 ? now.getFullYear() : now.getFullYear() - 1;
   });
+  const [hideWeekends, setHideWeekends] = useState(true);
   const [members, setMembers] = useState([]);
   const [entries, setEntries] = useState({});
   const [holidays, setHolidays] = useState({});
@@ -129,6 +137,14 @@ export default function PlanCalendar() {
             {fy}/{String(fy + 1).slice(2)}
           </button>
         ))}
+        <div style={{ flex: 1 }} />
+        <button
+          className={`plan-we-toggle${hideWeekends ? ' active' : ''}`}
+          onClick={() => setHideWeekends(v => !v)}
+          title="Samstag / Sonntag ein- oder ausblenden"
+        >
+          Sa/So {hideWeekends ? 'ausgeblendet' : 'sichtbar'}
+        </button>
       </div>
 
       <div className="plan-legend">
@@ -139,8 +155,20 @@ export default function PlanCalendar() {
 
       <div className="plan-scroll">
         {BLOCK_DEFS.map((blockDef, blockIdx) => {
-          const { dates1, dates2, y1, y2, m1, m2, allDates } = getBlockData(fiscalYear, blockDef);
+          const { dates1, dates2, y1, y2, m1, m2 } = getBlockData(fiscalYear, blockDef);
+          const fd1 = hideWeekends ? dates1.filter(d => !isWE(d)) : dates1;
+          const fd2 = hideWeekends ? dates2.filter(d => !isWE(d)) : dates2;
+          const allDates = [...fd1, ...fd2];
           const kws = kwGroups(allDates);
+          const kwBounds = kwBoundarySet(allDates);
+
+          const cls = (d, i, extra = '') => {
+            let c = extra;
+            if (isWE(d)) c += ' plan-we';
+            if (i === fd1.length) c += ' plan-month-boundary';
+            else if (kwBounds.has(i) && i > 0) c += ' plan-kw-boundary';
+            return c.trim();
+          };
 
           return (
             <div key={blockIdx} className="plan-block">
@@ -148,12 +176,8 @@ export default function PlanCalendar() {
                 <thead>
                   <tr>
                     <th className="plan-name-th plan-th-month">Name</th>
-                    <th colSpan={dates1.length} className="plan-th-month">
-                      {MONTH_NAMES[m1]} {y1}
-                    </th>
-                    <th colSpan={dates2.length} className="plan-th-month plan-th-month-r">
-                      {MONTH_NAMES[m2]} {y2}
-                    </th>
+                    <th colSpan={fd1.length} className="plan-th-month">{MONTH_NAMES[m1]} {y1}</th>
+                    <th colSpan={fd2.length} className="plan-th-month plan-th-month-r">{MONTH_NAMES[m2]} {y2}</th>
                   </tr>
                   <tr>
                     <th className="plan-name-th plan-th-kw" />
@@ -164,17 +188,13 @@ export default function PlanCalendar() {
                   <tr>
                     <th className="plan-name-th plan-th-wd" />
                     {allDates.map((d, i) => (
-                      <th key={i} className={`plan-th-wd${isWE(d) ? ' plan-we' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`}>
-                        {WD[d.getDay()]}
-                      </th>
+                      <th key={i} className={cls(d, i, 'plan-th-wd')}>{WD[d.getDay()]}</th>
                     ))}
                   </tr>
                   <tr>
                     <th className="plan-name-th plan-th-day" />
                     {allDates.map((d, i) => (
-                      <th key={i} className={`plan-th-day${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today-header' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`}>
-                        {d.getDate()}
-                      </th>
+                      <th key={i} className={cls(d, i, `plan-th-day${isToday(d) ? ' plan-today-header' : ''}`)}>{d.getDate()}</th>
                     ))}
                   </tr>
                   <tr>
@@ -182,7 +202,7 @@ export default function PlanCalendar() {
                     {allDates.map((d, i) => {
                       const hol = holidays[ds(d)];
                       return (
-                        <th key={i} className={`plan-ferien-cell${isWE(d) ? ' plan-we' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`} title={hol || ''}>
+                        <th key={i} className={cls(d, i, 'plan-ferien-cell')} title={hol || ''}>
                           {hol ? <span className="plan-ferien-text">{hol}</span> : null}
                         </th>
                       );
@@ -190,22 +210,23 @@ export default function PlanCalendar() {
                   </tr>
                 </thead>
                 <tbody>
-                  {members.map(m => (
-                    <tr key={m.id} className="plan-row">
+                  {members.map((m, rowIdx) => (
+                    <tr key={m.id} className={`plan-row${rowIdx % 2 === 1 ? ' plan-row-alt' : ''}`}>
                       <td className="plan-name-td">{m.name}</td>
                       {allDates.map((d, i) => {
                         const dateStr = ds(d);
                         const entry = entries[`${m.id}:${dateStr}`];
                         const ti = entry ? TYPE_MAP[entry.type] : null;
+                        const cellText = entry?.label || (ti?.code || null);
                         return (
                           <td
                             key={i}
-                            className={`plan-cell${isWE(d) ? ' plan-we' : ''}${isToday(d) ? ' plan-today' : ''}${i === dates1.length ? ' plan-month-boundary' : ''}`}
+                            className={cls(d, i, `plan-cell${isToday(d) ? ' plan-today' : ''}`)}
                             style={ti ? { background: ti.bg, color: ti.fg } : undefined}
                             title={ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
                             onClick={e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
                           >
-                            {entry?.label ? <span className="plan-cell-text">{entry.label}</span> : null}
+                            {cellText ? <span className="plan-cell-text">{cellText}</span> : null}
                           </td>
                         );
                       })}

@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0] — 2026-09-01
+
+### Changed
+- **Plan-Kalender v0.5.0**: Wochenenden standardmäßig ausgeblendet (Toggle-Button "Sa/So ausgeblendet/sichtbar" spart ~28% Breite)
+- Typ-Kürzel in Zellen: Nicht-consulting_blocked-Typen zeigen jetzt Kurzcode (HO, URL, Reise, Sch., Best., …) wenn kein Projekttext gesetzt
+- KW-Trennlinien: subtile vertikale Linie an KW-Grenzen in Header- und Datenzellen
+- Zeile alternierend hervorgehoben (Name-Spalte): gerades/ungerades Zebra-Striping
+- Zellgröße: height 24→28px, width 24→26px, font-size 0.56→0.6rem für bessere Lesbarkeit
+- `code`-Feld zu allen 12 PLAN_TYPES hinzugefügt
+- Hilfsfunktion `kwBoundarySet()` zur Berechnung der KW-Grenzen
+- CSS: `.plan-we-toggle`, `.plan-kw-boundary`, `.plan-row-alt`, angepasste min-widths
+
 ## [0.6.1] — 2026-09-01
 
 ### Added

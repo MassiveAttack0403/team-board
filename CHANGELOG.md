@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.0] — 2026-09-01
+
+### Changed
+- **Plan-Kalender v0.6.0**: Leere Zellen = weiß (9568 auto-befüllte `consulting_blocked`-Defaults aus DB gelöscht)
+- Österreichische Feiertage automatisch grau (hardcoded 2024–2027, `pointer-events: none`)
+- Wochenenden: deutlicher grau (#cbd5e1 statt halbtransparent schwarz)
+- Zellgröße: height 28→36px, width 26→32px, font-size 0.6→0.72rem — Text jetzt lesbar
+- `min-width` aller Header-Spalten: 26→32px
+- CSV-Analyse: die 5 fehlenden Personen (Corinna Rehberger-Gruber, Markus Weber, Andreas Kautek, Gernot Dachs + 1) sind im CSV gar nicht enthalten — kein Import-Fehler
+
 ## [0.7.0] — 2026-09-01
 
 ### Changed

@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 0.7.0
+## Version: 0.8.0
 
 ## Features
 
@@ -11,7 +11,7 @@ Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 - Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
 - Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
-- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 6×2-Monats-Blöcke untereinander, 12 Kategorietypen, Ferien-Zeile, CSV-Import; Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen
+- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 6×2-Monats-Blöcke untereinander, 12 Kategorietypen, Ferien-Zeile, CSV-Import; Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau
 - Team verwalten: Mitarbeiter hinzufügen / entfernen
 - Standup-Zusammenfassungen (Copilot-Text + Teams-Link speichern)
 - Grid-Layout (umbrechen statt horizontal scrollen)

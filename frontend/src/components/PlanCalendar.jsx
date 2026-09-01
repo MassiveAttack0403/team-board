@@ -1,7 +1,24 @@
-// Version: 0.5.0
+// Version: 0.6.0
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
+
+// Austrian national public holidays (Gesetzliche Feiertage) — static for fiscal years 2024-2027
+// Easter: 2024=Mar31, 2025=Apr20, 2026=Apr5, 2027=Mar28
+const AT_HOLIDAYS = new Set([
+  // 2024
+  '2024-01-01','2024-01-06','2024-04-01','2024-05-01','2024-05-09','2024-05-19','2024-05-30',
+  '2024-08-15','2024-10-26','2024-11-01','2024-12-08','2024-12-25','2024-12-26',
+  // 2025
+  '2025-01-01','2025-01-06','2025-04-21','2025-05-01','2025-05-29','2025-06-08','2025-06-19',
+  '2025-08-15','2025-10-26','2025-11-01','2025-12-08','2025-12-25','2025-12-26',
+  // 2026
+  '2026-01-01','2026-01-06','2026-04-06','2026-05-01','2026-05-14','2026-05-24','2026-06-04',
+  '2026-08-15','2026-10-26','2026-11-01','2026-12-08','2026-12-25','2026-12-26',
+  // 2027
+  '2027-01-01','2027-01-06','2027-03-29','2027-05-01','2027-05-06','2027-05-16','2027-05-27',
+  '2027-08-15','2027-10-26','2027-11-01','2027-12-08','2027-12-25','2027-12-26',
+]);
 
 const PLAN_TYPES = [
   { key: 'consulting_blocked', label: 'Consulting geblockt',     code: '',      bg: '#1e3a8a', fg: '#fff' },
@@ -164,7 +181,9 @@ export default function PlanCalendar() {
 
           const cls = (d, i, extra = '') => {
             let c = extra;
-            if (isWE(d)) c += ' plan-we';
+            const dstr = ds(d);
+            if (AT_HOLIDAYS.has(dstr)) c += ' plan-holiday';
+            else if (isWE(d)) c += ' plan-we';
             if (i === fd1.length) c += ' plan-month-boundary';
             else if (kwBounds.has(i) && i > 0) c += ' plan-kw-boundary';
             return c.trim();
@@ -218,13 +237,14 @@ export default function PlanCalendar() {
                         const entry = entries[`${m.id}:${dateStr}`];
                         const ti = entry ? TYPE_MAP[entry.type] : null;
                         const cellText = entry?.label || (ti?.code || null);
+                        const isHol = AT_HOLIDAYS.has(dateStr);
                         return (
                           <td
                             key={i}
                             className={cls(d, i, `plan-cell${isToday(d) ? ' plan-today' : ''}`)}
-                            style={ti ? { background: ti.bg, color: ti.fg } : undefined}
-                            title={ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
-                            onClick={e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
+                            style={(!isHol && !isWE(d) && ti) ? { background: ti.bg, color: ti.fg } : undefined}
+                            title={isHol ? 'Feiertag' : ti ? `${ti.label}${entry.label ? ': ' + entry.label : ''}` : ''}
+                            onClick={isHol ? undefined : e => openCell(m.id, dateStr, e.currentTarget.getBoundingClientRect())}
                           >
                             {cellText ? <span className="plan-cell-text">{cellText}</span> : null}
                           </td>

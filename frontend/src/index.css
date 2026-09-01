@@ -935,7 +935,7 @@ nav a.nav-active {
   padding: 4px 6px;
   letter-spacing: 0.03em;
   border-bottom: 1px solid rgba(255,255,255,0.12) !important;
-  min-width: 26px;
+  min-width: 32px;
 }
 
 .plan-th-month-r {
@@ -950,7 +950,7 @@ nav a.nav-active {
   text-align: center;
   padding: 3px 4px;
   border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-  min-width: 26px;
+  min-width: 32px;
 }
 
 .plan-th-wd {
@@ -960,7 +960,7 @@ nav a.nav-active {
   font-weight: 600;
   text-align: center;
   padding: 3px 4px;
-  min-width: 26px;
+  min-width: 32px;
 }
 
 .plan-th-day {
@@ -971,7 +971,7 @@ nav a.nav-active {
   text-align: center;
   padding: 3px 4px;
   border-bottom: 2px solid rgba(255,255,255,0.15) !important;
-  min-width: 26px;
+  min-width: 32px;
 }
 
 .plan-th-ferien {
@@ -1028,15 +1028,15 @@ nav a.nav-active {
 }
 
 .plan-we {
-  background: rgba(0,0,0,0.12) !important;
-  color: rgba(255,255,255,0.35) !important;
+  background: #cbd5e1 !important;
+  color: #94a3b8 !important;
 }
 
 .plan-row:hover .plan-name-td { background: #f1f5f9; }
 
 .plan-cell {
-  height: 28px;
-  width: 26px;
+  height: 36px;
+  width: 32px;
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
@@ -1048,7 +1048,7 @@ nav a.nav-active {
 .plan-cell:hover { filter: brightness(0.88); outline: 2px solid rgba(0,180,160,0.5); outline-offset: -2px; }
 
 .plan-cell-text {
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -1116,6 +1116,13 @@ nav a.nav-active {
 .plan-today-header {
   background: var(--teal) !important;
   color: #fff !important;
+}
+
+.plan-holiday {
+  background: #94a3b8 !important;
+  color: #475569 !important;
+  cursor: default;
+  pointer-events: none;
 }
 
 .plan-today {

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.2] — 2026-09-22
+
+### Added
+- `build-export.bat`: Erstellt self-contained Windows-ZIP ohne Node.js-Voraussetzung auf dem Zielrechner — lädt Node.js 22 portable herunter, baut Frontend, pre-installiert Backend-deps, seeded DB, packt alles in `team-board-export.zip`
+- Backend v0.3.0: serviert `backend/public/` als statisches Frontend (SPA-Fallback) wenn Verzeichnis existiert — ermöglicht Single-Server-Betrieb auf Port 3001
+
+### Changed
+- Export-ZIP: Ein Server (Port 3001) statt zwei, kein npm/Node.js auf Zielrechner nötig
+
 ## [1.2.1] — 2026-09-22
 
 ### Added

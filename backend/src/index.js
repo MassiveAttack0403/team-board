@@ -1,7 +1,9 @@
-// Version: 0.2.0 — Team Board API
+// Version: 0.3.0 — Team Board API
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 
 const membersRouter = require('./routes/members');
 const tasksRouter = require('./routes/tasks');
@@ -21,8 +23,16 @@ app.use('/api/absences', absencesRouter);
 app.use('/api/standups', standupsRouter);
 app.use('/api/plan', planRouter);
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '0.2.0' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '0.3.0' }));
+
+// Statisches Frontend servieren wenn public/ vorhanden (Produktions-Export)
+const publicDir = path.join(__dirname, '../public');
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir));
+  app.get('*', (req, res) => res.sendFile(path.join(publicDir, 'index.html')));
+  console.log(`[team-board] Frontend serviert aus ${publicDir}`);
+}
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[team-board] v0.2.0 — API listening on 0.0.0.0:${PORT}`);
+  console.log(`[team-board] v0.3.0 — API listening on 0.0.0.0:${PORT}`);
 });

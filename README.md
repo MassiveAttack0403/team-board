@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 1.2.1
+## Version: 1.2.2
 
 ## Features
 
@@ -52,7 +52,21 @@ npm run dev
 
 Dann: http://localhost:5173
 
-## Export auf anderen Rechner
+## Export auf anderen Rechner (ohne Node.js)
+
+```cmd
+build-export.bat
+```
+
+Erstellt `team-board-export.zip` (~50–80 MB) mit:
+- Node.js 22 portable (kein Install nötig)
+- Backend mit pre-installierten node_modules
+- Frontend als gebaute statische Dateien
+- Pre-seeded Datenbank
+
+Auf dem Zielrechner: ZIP entpacken → `start.bat` doppelklicken → Browser öffnet http://localhost:3001
+
+## Export mit Node.js (Git)
 
 ```cmd
 git clone https://github.com/MassiveAttack0403/team-board.git
@@ -60,7 +74,7 @@ cd team-board
 start.bat
 ```
 
-Oder als ZIP: Repo-Download von GitHub (ohne `node_modules` und `*.db` — werden beim ersten Start automatisch erzeugt).
+Voraussetzung: Node.js 22+ installiert.
 
 ## Seed (DB neu befüllen)
 

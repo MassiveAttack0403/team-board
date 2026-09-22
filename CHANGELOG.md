@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] — 2026-09-22
+
+### Added
+- `start.bat` (Windows) und `start.sh` (Linux/Mac): Ein-Klick-Starter — prüft Node 22, installiert Dependencies, legt `.env` aus `.env.example` an, seeded DB bei erstem Start, öffnet beide Server + Browser automatisch
+
 ## [1.2.0] — 2026-09-01
 
 ### Changed

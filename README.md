@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 1.2.0
+## Version: 1.2.1
 
 ## Features
 
@@ -27,7 +27,15 @@ Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 - DB: `node:sqlite` (Node 22 built-in, kein Python/MSVC nötig)
 - DB-Datei: `backend/data/board.db` (in .gitignore)
 
-## Setup
+## Quick Start (Ein-Klick)
+
+**Windows:** `start.bat` doppelklicken — installiert alles, seeded DB, öffnet Browser.
+
+**Linux/Mac:** `bash start.sh` — dasselbe vollautomatisch.
+
+Voraussetzung: **Node.js 22+** — https://nodejs.org
+
+## Setup (manuell)
 
 ```cmd
 # Backend (Terminal 1)
@@ -43,6 +51,16 @@ npm run dev
 ```
 
 Dann: http://localhost:5173
+
+## Export auf anderen Rechner
+
+```cmd
+git clone https://github.com/MassiveAttack0403/team-board.git
+cd team-board
+start.bat
+```
+
+Oder als ZIP: Repo-Download von GitHub (ohne `node_modules` und `*.db` — werden beim ersten Start automatisch erzeugt).
 
 ## Seed (DB neu befüllen)
 

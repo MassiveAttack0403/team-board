@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.5] — 2026-09-23
+
+### Changed
+- `start.bat` (v1.2.5): Erkennt fehlendes Node.js beim versehentlichen Start aus dem Source-Code-Download (`team-board-1.2.x`), zeigt eine klare Erklärung an und bietet direkten Browser-Link zu `team-board-export.zip` an.
+- `README.md`: Deutliche Warnbox ergänzt, dass ausschließlich `team-board-export.zip` (nicht der Quellcode `Source code (zip)`) heruntergeladen werden soll.
+
 ## [1.2.4] — 2026-09-23
 
 ### Fixed

@@ -1,18 +1,32 @@
+:: Version: 1.2.5 — Team Board Dev Starter
 @echo off
 chcp 65001 >nul
-title Team Board
+title Team Board — Dev Starter
 
 echo.
 echo  ===================================
-echo   Team Board — Starter
+echo   Team Board — Dev Starter
 echo  ===================================
 echo.
 
 :: Node.js pruefen
 node --version >nul 2>&1
 if errorlevel 1 (
-    echo  FEHLER: Node.js nicht gefunden.
-    echo  Bitte Node.js 22+ installieren: https://nodejs.org
+    echo.
+    echo  ===================================================================
+    echo   HINWEIS: Dies ist das Quellcode-Paket (fuer Entwickler mit Node.js)
+    echo  ===================================================================
+    echo.
+    echo  Node.js wurde auf diesem Computer nicht gefunden.
+    echo.
+    echo  Fuer die portable Version OHNE Installation von Node.js:
+    echo  Bitte laden Sie die fertige Datei 'team-board-export.zip' herunter:
+    echo  https://github.com/MassiveAttack0403/team-board/releases/latest
+    echo.
+    echo  Moechten Sie die Download-Seite jetzt im Browser oeffnen? (J/N)
+    set /p OPEN_BROWSER="Auswahl: "
+    if /i "%OPEN_BROWSER%"=="J" start https://github.com/MassiveAttack0403/team-board/releases/latest
+    echo.
     pause
     exit /b 1
 )

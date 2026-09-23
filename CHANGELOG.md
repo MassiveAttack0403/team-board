@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.3] — 2026-09-23
+
+### Fixed
+- `build-export.bat`: `xcopy` durch `robocopy` ersetzt — verhindert doppeltes `src\src\`-Verzeichnis wenn `_export` bereits existiert
+- `_export\start.bat`: Pfade auf `app\src\src\...` korrigiert (Bugfix für vorhandenen Export v1.2.2)
+
 ## [1.2.2] — 2026-09-22
 
 ### Added

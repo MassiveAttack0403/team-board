@@ -103,15 +103,16 @@ for /d %%D in ("%EXPORT_DIR%\node-tmp\*") do (
 rmdir "%EXPORT_DIR%\node-tmp" 2>nul
 
 :: Backend kopieren (mit node_modules, ohne .env — wird beim Start angelegt)
+:: robocopy statt xcopy: kein Doppel-src-Problem wenn EXPORT_DIR bereits existiert
 mkdir "%EXPORT_DIR%\app"
-xcopy /E /I /Y /Q "%~dp0backend\src"          "%EXPORT_DIR%\app\src"          >nul
-xcopy /E /I /Y /Q "%~dp0backend\node_modules" "%EXPORT_DIR%\app\node_modules" >nul
-xcopy /E /I /Y /Q "%~dp0backend\data"         "%EXPORT_DIR%\app\data"         >nul
+robocopy "%~dp0backend\src"          "%EXPORT_DIR%\app\src"          /E /NP /NFL /NDL /NJH /NJS >nul
+robocopy "%~dp0backend\node_modules" "%EXPORT_DIR%\app\node_modules" /E /NP /NFL /NDL /NJH /NJS >nul
+robocopy "%~dp0backend\data"         "%EXPORT_DIR%\app\data"         /E /NP /NFL /NDL /NJH /NJS >nul
 copy  /Y           "%~dp0backend\.env.example" "%EXPORT_DIR%\app\.env.example" >nul
 copy  /Y           "%~dp0backend\package.json" "%EXPORT_DIR%\app\package.json" >nul
 
 :: Frontend dist in app\public kopieren (wird vom Backend als static serviert)
-xcopy /E /I /Y /Q "%~dp0frontend\dist" "%EXPORT_DIR%\app\public" >nul
+robocopy "%~dp0frontend\dist" "%EXPORT_DIR%\app\public" /E /NP /NFL /NDL /NJH /NJS >nul
 
 :: start.bat ins Root schreiben
 (
@@ -137,7 +138,7 @@ xcopy /E /I /Y /Q "%~dp0frontend\dist" "%EXPORT_DIR%\app\public" >nul
     echo if not exist "%%ROOT%%app\data\board.db" (
     echo     echo  Datenbank initialisieren...
     echo     if not exist "%%ROOT%%app\data" mkdir "%%ROOT%%app\data"
-    echo     "%%ROOT%%node\node.exe" --experimental-sqlite "%%ROOT%%app\src\db\seed.js"
+    echo     "%%ROOT%%node\node.exe" --experimental-sqlite "%%ROOT%%app\src\db\seed.js" 2^>^&1
     echo )
     echo.
     echo echo  Starte Server auf http://localhost:3001 ...

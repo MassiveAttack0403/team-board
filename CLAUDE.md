@@ -2,111 +2,171 @@
 
 ## AI-Rolle
 
-Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pragmatische, wartbare Web-Applikationen (20+ Jahre Erfahrung). Einfachste Lösung die das Problem löst — kein Overengineering für ein internes Tool.
+Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pragmatische, wartbare Web-Applikationen (20+ Jahre Erfahrung). Einfachste Lösung, die das Problem löst — kein Overengineering für ein internes Tool.
 
 **Kompetenzen:**
-- Frontend: React 18, Vite, Drag & Drop (@hello-pangea/dnd), moderne CSS, UX-Sensibilität
-- Backend: Node.js 22, Express, REST API Design, Middleware-Patterns
-- Datenbank: SQLite (node:sqlite, `--experimental-sqlite`), Schema-Design, Migrations
-- Architektur: Monolith-first, klare Separation of Concerns, API-Contract zuerst
-- Azure/Cloud: SSO (Azure AD/Entra), App Service, grundlegende DevOps
+- **Frontend**: React 18, Vite, Drag & Drop (`@hello-pangea/dnd`), responsive CSS Grid/Flexbox, Desktop-Kalender-UX (Colspan, Sticky-Headers, Virtualisierung/Auto-Scroll)
+- **Backend**: Node.js 22, Express, REST API Design, Single-Server-Betrieb (Express serviert React SPA statisch)
+- **Datenbank**: SQLite (`node:sqlite`, `--experimental-sqlite`), Schema-Design, Transaktionen, Migrations, Seed-Skripte
+- **Deployment & Packaging**: Zero-Dependency-Packaging für Windows (Node.js portable Bundling), Windows-Batch-Disziplin (CRLF-Zwang, `call`-Präfix für `.cmd`, `robocopy /MIR`), GitHub Releases via `gh` CLI
+- **Architektur**: Monolith-first, klare Separation of Concerns, API-Contract zuerst
+- **Azure/Cloud**: SSO (Azure AD/Entra), App Service, Teams-Tabs
 
 **Verhalten:**
 - UX-Impact jeder technischen Entscheidung mitdenken
-- Kein Framework-Overkill — dieses Tool muss von echten Menschen täglich benutzt werden
-- Performance-Regression bei jedem Feature mitprüfen
+- Kein Framework-Overkill — dieses Tool wird im Siemens-Alltag verwendet
+- Performance-Regression bei jedem Feature mitprüfen (besonders bei 365-Tage-Kalender-Tabellen)
+- Änderungen immer direkt, autonom und vollständig nach GitHub pushen
 
-## Skills — wann welcher
+## Skills & Tools — wann welcher
 
-| Situation | Tool/Skill |
+| Situation / Aufgabe | Tool / Skill |
 |---|---|
-| Code-Review vor PR | `Skill("code-review")` |
-| Charts / Dashboards | `Skill("dataviz")` |
-| Security-Check | `Skill("security-review")` |
+| Codebase navigieren / Impact analysieren | `graft ask` / `graft callers <symbol> --depth all` |
+| Code-Review vor Commits / PRs | `Skill("code-review")` |
+| Code-Cleanup / Vereinfachung | `Skill("simplify")` |
+| Charts & Datenvisualisierungen | `Skill("dataviz")` |
+| Security-Check / OWASP | `Skill("security-review")` |
+| End-to-End UI-Prüfung / Browser-Tests | MCP `playwright` (`browser_navigate`, `browser_snapshot`) |
+
+## Versionsindex (Stand v1.2.5)
+
+| Bereich | Datei | Version | Beschreibung |
+|---|---|---|---|
+| **Projekt** | `README.md` / `CHANGELOG.md` | v1.2.5 | Gesamtrelease & Dokumentation |
+| **Backend API** | `backend/src/index.js` | v0.3.1 | Express Server, Multi-Pfad Frontend-Static-Serving |
+| **Backend DB** | `backend/src/db/index.js` | v0.1.4 | SQLite DB-Init, robuste `resolveDbPath()` |
+| **Backend Seed** | `backend/src/db/seed.js` | v0.2.0 | Standard-Seed (13 Mitarbeiter, Tasks, Abwesenheiten) |
+| **Backend Seed** | `backend/src/db/seed-aug-sep.js` | v0.1.0 | Consultingplan Aug–Sep 2026 Whiteboard-Seed |
+| **Backend Import** | `backend/src/db/import-plan-csv.js` | v0.1.0 | CSV-Import Consultingplan (Windows-1252) |
+| **Backend Fill** | `backend/src/db/fill-plan-defaults.js`| v0.1.0 | Werktage mit `consulting_blocked` auffüllen |
+| **Routen** | `backend/src/routes/plan.js` | v0.2.0 | Consultingplan API (`/api/plan`) |
+| **Routen** | `backend/src/routes/tasks.js` | v0.1.2 | Tasks API (`/api/tasks`) |
+| **Routen** | `backend/src/routes/members.js` | v0.1.1 | Mitarbeiter API (`/api/members`) |
+| **Routen** | `backend/src/routes/absences.js` | v0.1.1 | Abwesenheiten API (`/api/absences`) |
+| **Routen** | `backend/src/routes/standups.js` | v0.1.0 | Standups API (`/api/standups`) |
+| **Frontend App** | `frontend/src/App.jsx` | v0.5.0 | Routing (`/`, `/plan`, `/absences`, `/partnering`, ...) |
+| **Frontend API** | `frontend/src/api/client.js` | v0.4.0 | Axios Client mit `/api` BaseURL |
+| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v0.8.0 | Consultingplan mit 12 Monatsblöcken & Colspan |
+| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.4.1 | Task-Board DnD-Spalten |
+| **Frontend Abwesenheit**| `frontend/src/components/AbsenceCalendar.jsx` | v0.1.1 | 5-Wochen-Abwesenheitsmatrix |
+| **Frontend Partnering** | `frontend/src/components/Partnering.jsx` | v0.1.0 | 34 Partnerfirmen Statusmatrix |
+| **Frontend Stunden** | `frontend/src/components/StundenStatistik.jsx` | v0.1.0 | Stacked Bar Chart KW30–KW33 |
+| **Starter (Dev)** | `start.bat` | v1.2.5 | Lokaler Starter mit Node.js-Prüfung & Hilfe |
+| **Starter (Portable)** | `scripts/start-portable.bat` | v1.2.4 | Starter für No-Node Zielrechner |
+| **Export Builder**| `build-export.bat` | v1.2.4 | Baut portable self-contained ZIP |
 
 ## Stack
-- **Frontend**: React 18 + @hello-pangea/dnd + Vite (Port 5173)
+- **Frontend**: React 18 + @hello-pangea/dnd + Vite (Port 5173 im Dev-Modus)
 - **Backend**: Node.js 22 / Express (Port 3001)
 - **DB**: `node:sqlite` (built-in Node 22, `--experimental-sqlite` flag nötig, kein Python/MSVC)
-- **DB-Datei**: `backend/data/board.db` (in .gitignore)
+- **DB-Datei**: `backend/data/board.db` (in `.gitignore`)
+- **Produktion / Portable**: Backend serviert Frontend statisch über Port 3001 (Single Server)
 
-## Starten
+## Starten & Deployment
+
+### 1. Entwicklungsbetrieb (mit Node.js 22+)
 ```cmd
-# Terminal 1
-cd backend && npm run dev
+# Ein-Klick-Starter (startet Backend Port 3001 & Frontend Vite Port 5173)
+start.bat
 
-# Terminal 2
-cd frontend && npm run dev
+# Oder manuell:
+cd backend && npm run dev     # Terminal 1 (Port 3001)
+cd frontend && npm run dev    # Terminal 2 (Port 5173)
 ```
+
+### 2. Portable Version für Zielrechner ("V1" / Ohne Node.js)
+```cmd
+build-export.bat
+```
+- Baut Frontend (`vite build`), spiegelt Backend + Abhängigkeiten via `robocopy /MIR` nach `_export/app/`, packt portable `node.exe` und erstellt `team-board-export.zip` (~39 MB).
+- **Release-Upload**: ZIP als Asset auf GitHub Releases hochladen:
+  ```cmd
+  gh release create v1.x.y team-board-export.zip --title "..." --notes "..."
+  ```
+- **Wichtig**: "V1" meint immer die No-Node-Variante (`team-board-export.zip`), **niemals** ein Git-Tag `v1` erstellen! Releases folgen fortlaufend SemVer (`v1.x.y`).
 
 ## Wichtige Befehle
 ```cmd
-npm run seed    # DB neu befüllen (in backend/)
-npm run start   # Produktion
-build-export.bat # Portable ZIP (team-board-export.zip) erstellen
+npm run seed           # DB Standard-Seed (in backend/)
+npm run seed-aug-sep   # Consultingplan Aug–Sep 2026 Daten laden (in backend/)
+npm run import-plan    # Consultingplan CSVs importieren (in backend/)
+npm run fill-plan      # Leere Werktage auffüllen (in backend/)
+build-export.bat       # Portable ZIP erstellen (im Repo-Root)
 ```
 
 ## Projektstruktur
 ```
 team-board/
 ├── build-export.bat         # Portable Export Builder (Windows ohne Node.js)
-├── start.bat                # Starter für lokale Umgebung (mit Node 22)
+├── start.bat                # Dev-Starter für Windows (mit Node 22)
+├── start.sh                 # Dev-Starter für Linux/Mac
 ├── scripts/
-│   └── start-portable.bat   # Starter für Portable Export
+│   └── start-portable.bat   # Saubere Vorlage für Export-Starter
 ├── backend/
 │   ├── src/
 │   │   ├── db/
-│   │   │   ├── index.js     # DB-Initialisierung (node:sqlite)
-│   │   │   ├── schema.sql   # Tabellen: members, tasks, absences, standup_summaries, audit_log
-│   │   │   └── seed.js      # 13 Mitarbeiter + Tasks + Abwesenheiten vom Whiteboard
+│   │   │   ├── index.js             # DB-Initialisierung (node:sqlite)
+│   │   │   ├── schema.sql           # Tabellen: members, tasks, absences, plan_entries, ...
+│   │   │   ├── seed.js              # 13 Mitarbeiter + Tasks + Abwesenheiten
+│   │   │   ├── seed-aug-sep.js      # Aug–Sep 2026 Detaildaten
+│   │   │   ├── import-plan-csv.js   # Consultingplan CSV Import
+│   │   │   └── fill-plan-defaults.js# Default-Einträge für Werktage
 │   │   ├── routes/
-│   │   │   ├── members.js   # GET/POST/PATCH/DELETE /api/members
-│   │   │   ├── tasks.js     # GET/POST/PATCH/:id/move /api/tasks
-│   │   │   ├── absences.js  # GET/POST/DELETE /api/absences
-│   │   │   └── standups.js  # GET/POST/DELETE /api/standups
-│   │   └── index.js         # Express App, bindet auf 0.0.0.0:3001
-│   ├── .env                 # PORT, DB_PATH, Azure AD (nicht in git)
+│   │   │   ├── members.js           # GET/POST/PATCH/DELETE /api/members
+│   │   │   ├── tasks.js             # GET/POST/PATCH/:id/move /api/tasks
+│   │   │   ├── absences.js          # GET/POST/DELETE /api/absences
+│   │   │   ├── standups.js          # GET/POST/DELETE /api/standups
+│   │   │   └── plan.js              # GET/PUT/DELETE /api/plan
+│   │   └── index.js                 # Express App, bindet auf 0.0.0.0:3001
+│   ├── .env                         # PORT, DB_PATH, CORS_ORIGIN (in .gitignore)
 │   └── .env.example
 └── frontend/
     └── src/
-        ├── api/client.js    # axios-Wrapper für alle API-Calls
+        ├── api/client.js            # Axios-Wrapper für alle API-Calls (/api)
         ├── components/
-        │   ├── Board.jsx    # Haupt-Board: DnD-Spalten pro Mitarbeiter
-        │   └── StandupList.jsx  # Copilot-Zusammenfassungen
-        └── App.jsx          # Routing: / → Board, /standups → StandupList
+        │   ├── Board.jsx            # Haupt-Board: DnD-Spalten pro Mitarbeiter
+        │   ├── PlanCalendar.jsx     # Consultingplan: 12 Monatsblöcke, Colspan, Auto-Scroll
+        │   ├── AbsenceCalendar.jsx  # Abwesenheiten: 5-Wochen-Matrix
+        │   ├── Partnering.jsx       # 34 Partnerfirmen Statusmatrix
+        │   ├── StundenStatistik.jsx # Stacked Bar Chart KW30–KW33
+        │   ├── SrStatistik.jsx      # Power BI Platzhalter
+        │   └── StandupList.jsx      # Copilot-Zusammenfassungen
+        └── App.jsx                  # Routing & Header-Navigation
+```
 
 ## DB-Schema
-- **members**: id, name, email, display_order
-- **tasks**: id, member_id, title, notes, priority, due_date, position, source (manual/email), source_ref, created_at, updated_at
-- **absences**: id, member_id, type (URLAUB/ZA/KS/OTHER), date_from, date_to, notes
-- **standup_summaries**: id, week (ISO z.B. 2026-W34), meeting_date, summary, source_url
-- **audit_log**: action, entity, entity_id, payload, actor, ts
+- **members**: `id`, `name`, `email`, `display_order`
+- **tasks**: `id`, `member_id`, `title`, `notes`, `priority`, `due_date`, `position`, `source`, `source_ref`, `created_at`, `updated_at`
+- **absences**: `id`, `member_id`, `type` (URLAUB/ZA/KS/OTHER), `date_from`, `date_to`, `notes`
+- **plan_entries**: `id`, `member_id`, `date` (YYYY-MM-DD), `type` (consulting_blocked, holiday, travel, homeoffice, ...), `text`, `notes`, `created_at`, `updated_at`
+- **standup_summaries**: `id`, `week` (ISO z.B. 2026-W34), `meeting_date`, `summary`, `source_url`
+- **audit_log**: `id`, `action`, `entity`, `entity_id`, `payload`, `actor`, `ts`
 
-## Team (13 Mitarbeiter, Stand 2026-08-18)
+## Team (13 Mitarbeiter)
 Mousser Kerkeni, Franz Kopecky, Emanuel Ivanovic, Jochen Steindorfer,
 Markus Trummer, Parameshwaran Raju, Ahmed Fadl, Sofiane Ichira,
 Markus Gerstl, Corinna Rehberger-Gruber, Markus Weber, Andreas Kautek, Gernot Dachs
 
-## Roadmap / Nächste Schritte
+## Roadmap / Status
 - [x] Member-Verwaltung UI (Hinzufügen/Entfernen von Personen im Board)
 - [x] Abwesenheits-UI (Modal zum Anlegen von URLAUB/ZA/KS direkt im Board)
-- [x] Teams-Tab Integration (Manifest v0.4.0 unter teams-manifest/)
+- [x] Teams-Tab Integration (Manifest v0.4.0 unter `teams-manifest/`)
 - [x] Workload-Anzeige (Task-Anzahl-Badge pro Spalte)
 - [x] Priorität / Farb-Label (HOCH-Chip + rote Randlinie)
-- [x] Fälligkeitsdatum auf Tasks (due_date, farbkodierter Badge)
-- [x] Abwesenheitskalender-Ansicht (/absences, 5-Wochen-Matrix)
-- [ ] Outlook Drag & Drop → Task (Microsoft Graph API, braucht Azure App Registration)
+- [x] Fälligkeitsdatum auf Tasks (`due_date`, farbkodierter Badge)
+- [x] Abwesenheitskalender-Ansicht (`/absences`, 5-Wochen-Matrix)
+- [x] Consultingplan (`/plan`, 12 Monatsblöcke, Colspan, Auto-Scroll heute, Feiertage)
+- [x] Partnering for Success (`/partnering`, 34 Firmen)
+- [x] Stunden Statistik (`/stunden`, KW30–KW33)
+- [x] Portable Windows-Export ohne Node.js (`build-export.bat`, Single Server)
+- [ ] Outlook Drag & Drop → Task (Microsoft Graph API, benötigt Azure App Registration)
 - [ ] Urlaubs-Sync aus Outlook-Kalender (OOO-Einträge automatisch importieren)
 - [ ] Azure AD SSO (MSAL)
 - [ ] Azure App Service Deployment (Siemens Tenant)
-- [ ] Task-Kommentare / Notizen-Ansicht im Board
-- [ ] Filter nach Priorität / Fälligkeitsdatum
 
-## Umgebung
-- MS365 / Siemens-Domain (Azure AD Tenant vorhanden)
-- Outlook + Teams (Copilot-Zusammenfassungen werden manuell eingefügt)
-- Prototyp: lokal auf 0.0.0.0, später Azure App Service
-- GitHub: https://github.com/MassiveAttack0403/team-board
-
-## Globale Regeln
-Siehe `~/.claude/CLAUDE.md` — nach jeder Änderung: Version erhöhen, Header/CHANGELOG/README aktualisieren, git add (nur geänderte Files), commit, push.
+## Globale Arbeitsregeln
+Siehe `~/.claude/CLAUDE.md`:
+1. Bei jeder Änderung File-Header, Log-String, `CHANGELOG.md`, `README.md` und `CLAUDE.md` synchron aktualisieren.
+2. Niemals ungesyncte lokale Commits belassen — immer direkt zu GitHub pushen (`git push`).
+3. `graft build` nach strukturellen Änderungen ausführen.

@@ -4,6 +4,26 @@ Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
 ## Version: 1.2.4
 
+## Schnellstart ohne Installation (Windows)
+
+Das Team Board kann ohne Node.js, Git oder sonstige Software-Voraussetzungen auf jedem Windows-Rechner direkt ausgeführt werden:
+
+1. **ZIP herunterladen:**
+   - **[team-board-export.zip herunterladen](https://github.com/MassiveAttack0403/team-board/releases/latest/download/team-board-export.zip)** (~39 MB)
+   - *(Alternativ: über die [GitHub Releases-Seite](https://github.com/MassiveAttack0403/team-board/releases/latest))*
+2. **Entpacken:**
+   - Rechtsklick auf `team-board-export.zip` → **Alle extrahieren...** in einen beliebigen Zielordner (z.B. Desktop oder `C:\TeamBoard`).
+3. **Starten:**
+   - In den entpackten Ordner wechseln.
+   - Doppelklick auf **`start.bat`**.
+4. **Fertig:**
+   - Ein Konsolenfenster öffnet sich und startet den Server.
+   - Nach ca. 4 Sekunden öffnet sich der Browser automatisch unter:
+     ```
+     http://localhost:3001
+     ```
+   - Das Konsolenfenster während der Nutzung geöffnet lassen. Zum Beenden das Konsolenfenster schließen.
+
 ## Features
 
 - Board: eine Spalte pro Mitarbeiter, Drag & Drop zwischen Spalten

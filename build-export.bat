@@ -1,10 +1,11 @@
+:: Version: 1.2.4 — Team Board Portable Export Builder
 @echo off
 chcp 65001 >nul
 title Team Board — Export Builder
 
 echo.
 echo  ============================================
-echo   Team Board — Portable Export Builder
+echo   Team Board — Portable Export Builder v1.2.4
 echo  ============================================
 echo.
 echo  Erstellt eine self-contained ZIP die auf
@@ -26,7 +27,7 @@ if errorlevel 1 (
     echo         Node.js benoetigt um das Frontend zu bauen.
     pause & exit /b 1
 )
-npm --version >nul 2>&1
+call npm --version >nul 2>&1
 if errorlevel 1 (
     echo  FEHLER: npm nicht gefunden.
     pause & exit /b 1
@@ -72,18 +73,25 @@ if errorlevel 1 ( echo  FEHLER beim Seeden. & popd & pause & exit /b 1 )
 popd
 
 :: -------------------------------------------------------
-:: 5. Node.js portable herunterladen
+:: 5. Node.js portable bereitstellen
 :: -------------------------------------------------------
-echo  [5/7] Node.js v%NODE_VERSION% portable herunterladen...
-if exist "%~dp0%NODE_ZIP%" (
-    echo         Bereits vorhanden — skip.
+echo  [5/7] Node.js portable bereitstellen...
+set "ACTUAL_NODE_ZIP="
+if exist "%~dp0node-portable.zip" (
+    set "ACTUAL_NODE_ZIP=%~dp0node-portable.zip"
+    echo         node-portable.zip vorhanden — verwende lokales Archiv.
+) else if exist "%~dp0%NODE_ZIP%" (
+    set "ACTUAL_NODE_ZIP=%~dp0%NODE_ZIP%"
+    echo         %NODE_ZIP% vorhanden — verwende lokales Archiv.
 ) else (
+    echo         Lade Node.js v%NODE_VERSION% herunter...
     powershell -Command "try { Invoke-WebRequest -Uri '%NODE_URL%' -OutFile '%~dp0%NODE_ZIP%' -UseBasicParsing } catch { Write-Error $_.Exception.Message; exit 1 }"
     if errorlevel 1 (
         echo  FEHLER: Download fehlgeschlagen. Internetverbindung pruefen.
         echo  URL: %NODE_URL%
         pause & exit /b 1
     )
+    set "ACTUAL_NODE_ZIP=%~dp0%NODE_ZIP%"
 )
 
 :: -------------------------------------------------------
@@ -91,70 +99,34 @@ if exist "%~dp0%NODE_ZIP%" (
 :: -------------------------------------------------------
 echo  [6/7] Export-Paket zusammenstellen...
 
-if exist "%EXPORT_DIR%" rmdir /s /q "%EXPORT_DIR%"
+if exist "%EXPORT_DIR%" (
+    powershell -Command "if (Test-Path '%EXPORT_DIR%') { Remove-Item -Path '%EXPORT_DIR%' -Recurse -Force }"
+)
 mkdir "%EXPORT_DIR%"
 
 :: Node.js portable extrahieren
-powershell -Command "Expand-Archive -Path '%~dp0%NODE_ZIP%' -DestinationPath '%EXPORT_DIR%\node-tmp' -Force"
-:: Umbennen: node-v22.x.x-win-x64 -> node
+powershell -Command "Expand-Archive -Path '%ACTUAL_NODE_ZIP%' -DestinationPath '%EXPORT_DIR%\node-tmp' -Force"
 for /d %%D in ("%EXPORT_DIR%\node-tmp\*") do (
     move "%%D" "%EXPORT_DIR%\node" >nul
 )
 rmdir "%EXPORT_DIR%\node-tmp" 2>nul
 
-:: Backend kopieren (mit node_modules, ohne .env — wird beim Start angelegt)
-:: robocopy statt xcopy: kein Doppel-src-Problem wenn EXPORT_DIR bereits existiert
-mkdir "%EXPORT_DIR%\app"
-robocopy "%~dp0backend\src"          "%EXPORT_DIR%\app\src"          /E /NP /NFL /NDL /NJH /NJS >nul
-robocopy "%~dp0backend\node_modules" "%EXPORT_DIR%\app\node_modules" /E /NP /NFL /NDL /NJH /NJS >nul
-robocopy "%~dp0backend\data"         "%EXPORT_DIR%\app\data"         /E /NP /NFL /NDL /NJH /NJS >nul
-copy  /Y           "%~dp0backend\.env.example" "%EXPORT_DIR%\app\.env.example" >nul
-copy  /Y           "%~dp0backend\package.json" "%EXPORT_DIR%\app\package.json" >nul
+:: Backend kopieren (/MIR sichert saubere Ordner ohne Altlasten)
+mkdir "%EXPORT_DIR%\app\src"
+robocopy "%~dp0backend\src"          "%EXPORT_DIR%\app\src"          /E /MIR /NP /NFL /NDL /NJH /NJS >nul
+mkdir "%EXPORT_DIR%\app\node_modules"
+robocopy "%~dp0backend\node_modules" "%EXPORT_DIR%\app\node_modules" /E /MIR /NP /NFL /NDL /NJH /NJS >nul
+mkdir "%EXPORT_DIR%\app\data"
+robocopy "%~dp0backend\data"         "%EXPORT_DIR%\app\data"         /E /MIR /NP /NFL /NDL /NJH /NJS >nul
+copy  /Y "%~dp0backend\.env.example" "%EXPORT_DIR%\app\.env.example" >nul
+copy  /Y "%~dp0backend\package.json" "%EXPORT_DIR%\app\package.json" >nul
 
 :: Frontend dist in app\public kopieren (wird vom Backend als static serviert)
-robocopy "%~dp0frontend\dist" "%EXPORT_DIR%\app\public" /E /NP /NFL /NDL /NJH /NJS >nul
+mkdir "%EXPORT_DIR%\app\public"
+robocopy "%~dp0frontend\dist" "%EXPORT_DIR%\app\public" /E /MIR /NP /NFL /NDL /NJH /NJS >nul
 
-:: start.bat ins Root schreiben
-(
-    echo @echo off
-    echo chcp 65001 ^>nul
-    echo title Team Board
-    echo.
-    echo echo.
-    echo echo  ===================================
-    echo echo   Team Board
-    echo echo  ===================================
-    echo echo.
-    echo.
-    echo set ROOT=%%~dp0
-    echo.
-    echo :: .env anlegen falls nicht vorhanden
-    echo if not exist "%%ROOT%%app\.env" (
-    echo     copy /y "%%ROOT%%app\.env.example" "%%ROOT%%app\.env" ^>nul
-    echo     echo  .env angelegt.
-    echo )
-    echo.
-    echo :: DB seeden falls nicht vorhanden
-    echo if not exist "%%ROOT%%app\data\board.db" (
-    echo     echo  Datenbank initialisieren...
-    echo     if not exist "%%ROOT%%app\data" mkdir "%%ROOT%%app\data"
-    echo     "%%ROOT%%node\node.exe" --experimental-sqlite "%%ROOT%%app\src\db\seed.js" 2^>^&1
-    echo )
-    echo.
-    echo echo  Starte Server auf http://localhost:3001 ...
-    echo echo  ^(Browser wird in 4 Sekunden geoeffnet^)
-    echo echo.
-    echo.
-    echo start "" /B "%%ROOT%%node\node.exe" --experimental-sqlite "%%ROOT%%app\src\index.js"
-    echo.
-    echo timeout /t 4 /nobreak ^>nul
-    echo start http://localhost:3001
-    echo.
-    echo echo  Server laeuft. Dieses Fenster offen lassen.
-    echo echo  Zum Beenden: Ctrl+C oder Fenster schliessen.
-    echo echo.
-    echo pause
-) > "%EXPORT_DIR%\start.bat"
+:: start.bat ins Export-Root kopieren
+copy /Y "%~dp0scripts\start-portable.bat" "%EXPORT_DIR%\start.bat" >nul
 
 :: -------------------------------------------------------
 :: 7. ZIP erstellen
@@ -165,7 +137,7 @@ powershell -Command "Compress-Archive -Path '%EXPORT_DIR%\*' -DestinationPath '%
 if errorlevel 1 ( echo  FEHLER beim Erstellen der ZIP. & pause & exit /b 1 )
 
 :: Temp-Verzeichnis aufraumen
-rmdir /s /q "%EXPORT_DIR%"
+powershell -Command "if (Test-Path '%EXPORT_DIR%') { Remove-Item -Path '%EXPORT_DIR%' -Recurse -Force }"
 
 echo.
 echo  ============================================
@@ -180,4 +152,3 @@ echo.
 echo  Dateigroesse:
 powershell -Command "$s=(Get-Item '%ZIP_NAME%').Length; Write-Host ('  ' + [math]::Round($s/1MB,1) + ' MB')"
 echo.
-pause

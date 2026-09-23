@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.4] — 2026-09-23
+
+### Fixed
+- **Cannot GET /** auf Zielrechner behoben:
+  - `backend/src/index.js` (v0.3.1): Dynamische Pfadsuche nach `index.html` über mehrere Kandidatenverzeichnisse (`app/public`, `../public`, `../../public`, `frontend/dist`). Klarer Fehlerhinweis und Status 503 statt leerem 404 wenn Frontend fehlt.
+  - `backend/src/db/index.js` (v0.1.4): Robuste `resolveDbPath()`-Funktion verhindert fehlerhafte Pfadauflösung bei relativen DB-Pfaden.
+  - `build-export.bat` (v1.2.4):
+    - `call npm --version` behebt vorzeitigen Abbruch in Windows `cmd.exe`.
+    - `robocopy /MIR` verhindert Altlasten und Doppelordner (`src\src`, `data\data`) im Export-Paket.
+    - Exportiert sauberes `start.bat` aus Vorlage `scripts/start-portable.bat`, das direkt in `app/` wechselt.
+  - `.gitignore`: Temporäres `_export/`-Verzeichnis und ZIP-Archive ignoriert; `_export/start.bat` aus Git-Tracking entfernt.
+
 ## [1.2.3] — 2026-09-23
 
 ### Fixed

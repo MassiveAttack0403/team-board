@@ -43,11 +43,16 @@ cd frontend && npm run dev
 ```cmd
 npm run seed    # DB neu befüllen (in backend/)
 npm run start   # Produktion
+build-export.bat # Portable ZIP (team-board-export.zip) erstellen
 ```
 
 ## Projektstruktur
 ```
 team-board/
+├── build-export.bat         # Portable Export Builder (Windows ohne Node.js)
+├── start.bat                # Starter für lokale Umgebung (mit Node 22)
+├── scripts/
+│   └── start-portable.bat   # Starter für Portable Export
 ├── backend/
 │   ├── src/
 │   │   ├── db/

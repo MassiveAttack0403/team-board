@@ -4,5 +4,9 @@ data/
 dist/
 *.db
 
+# Export & Portable Build Artifacts
+_export/
+*.zip
+
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 graft/

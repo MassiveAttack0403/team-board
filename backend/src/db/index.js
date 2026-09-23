@@ -1,9 +1,21 @@
-// Version: 0.1.3 — uses node:sqlite (built-in Node 22, no native build needed)
+// Version: 0.1.4 — uses node:sqlite (built-in Node 22, no native build needed)
 const { DatabaseSync } = require('node:sqlite');
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = process.env.DB_PATH || path.join(__dirname, '../../data/board.db');
+function resolveDbPath() {
+  if (process.env.DB_PATH) {
+    if (path.isAbsolute(process.env.DB_PATH)) return process.env.DB_PATH;
+    const fromCwd = path.resolve(process.cwd(), process.env.DB_PATH);
+    if (fs.existsSync(fromCwd)) return fromCwd;
+    const fromModule = path.resolve(__dirname, '../../', process.env.DB_PATH);
+    if (fs.existsSync(fromModule)) return fromModule;
+    return fromCwd;
+  }
+  return path.join(__dirname, '../../data/board.db');
+}
+
+const DB_PATH = resolveDbPath();
 
 let db;
 

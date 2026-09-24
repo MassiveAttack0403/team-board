@@ -1,7 +1,8 @@
-// Version: 0.1.4 — uses node:sqlite (built-in Node 22, no native build needed)
+// Version: 0.1.5 — uses node:sqlite (built-in Node 22, no native build needed)
 const { DatabaseSync } = require('node:sqlite');
 const fs = require('fs');
 const path = require('path');
+const { seedPartners } = require('./seed-partners');
 
 function resolveDbPath() {
   if (process.env.DB_PATH) {
@@ -28,6 +29,7 @@ function getDb() {
   const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
   db.exec(schema);
   try { db.exec('ALTER TABLE tasks ADD COLUMN due_date TEXT'); } catch (_) { /* column exists */ }
+  try { seedPartners(db); } catch (_) { /* ignore if already seeded or table exists */ }
   return db;
 }
 

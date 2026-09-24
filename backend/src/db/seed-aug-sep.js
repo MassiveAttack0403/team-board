@@ -1,5 +1,5 @@
-// Version: 0.1.0
-// Clears Aug-Sep 2026 and re-seeds from whiteboard image
+// Version: 0.2.0
+// Clears Aug-Sep 2026 and re-seeds from whiteboard image (with transaction)
 import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -118,13 +118,20 @@ const insert = db.prepare(
 );
 
 let count = 0;
-for (const [name, rows] of Object.entries(DATA)) {
-  const id = memberId(name);
-  if (!id) continue;
-  for (const { date, type, label } of rows) {
-    insert.run(id, date, type, label || null);
-    count++;
+db.exec('BEGIN TRANSACTION');
+try {
+  for (const [name, rows] of Object.entries(DATA)) {
+    const id = memberId(name);
+    if (!id) continue;
+    for (const { date, type, label } of rows) {
+      insert.run(id, date, type, label || null);
+      count++;
+    }
   }
+  db.exec('COMMIT');
+} catch (err) {
+  db.exec('ROLLBACK');
+  throw err;
 }
 
 console.log(`Inserted ${count} plan_entries for Aug-Sep 2026`);

@@ -1,4 +1,4 @@
-// Version: 0.1.0 — Fills all weekdays with consulting_blocked where no entry exists
+// Version: 0.2.0 — Fills all weekdays with consulting_blocked where no entry exists (with transaction)
 // Usage: npm run fill-plan [-- --dry-run] [-- --year 2024] (default: all 3 fiscal years)
 const { getDb } = require('./index');
 
@@ -30,19 +30,26 @@ function run() {
 
   let inserted = 0;
 
-  for (const fy of FISCAL_YEARS) {
-    const from = `${fy}-10-01`;
-    const to   = `${fy + 1}-09-30`;
-    const days = weekdaysInRange(from, to);
-    console.log(`[${fy}/${fy + 1}] ${days.length} Werktage (${from} – ${to})`);
+  if (!DRY_RUN) db.exec('BEGIN TRANSACTION');
+  try {
+    for (const fy of FISCAL_YEARS) {
+      const from = `${fy}-10-01`;
+      const to   = `${fy + 1}-09-30`;
+      const days = weekdaysInRange(from, to);
+      console.log(`[${fy}/${fy + 1}] ${days.length} Werktage (${from} – ${to})`);
 
-    for (const m of members) {
-      for (const day of days) {
-        if (DRY_RUN) { inserted++; continue; }
-        const info = insertStmt.run(m.id, day, 'consulting_blocked');
-        if (info.changes) inserted++;
+      for (const m of members) {
+        for (const day of days) {
+          if (DRY_RUN) { inserted++; continue; }
+          const info = insertStmt.run(m.id, day, 'consulting_blocked');
+          if (info.changes) inserted++;
+        }
       }
     }
+    if (!DRY_RUN) db.exec('COMMIT');
+  } catch (err) {
+    if (!DRY_RUN) db.exec('ROLLBACK');
+    throw err;
   }
 
   console.log(`\nDone: ${inserted} neue consulting_blocked Einträge${DRY_RUN ? ' [DRY RUN]' : ''}`);

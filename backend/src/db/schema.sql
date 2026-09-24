@@ -1,4 +1,4 @@
--- Team Board Schema v0.2.1
+-- Team Board Schema v0.3.0
 
 CREATE TABLE IF NOT EXISTS members (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,3 +63,18 @@ CREATE TABLE IF NOT EXISTS holiday_entries (
   date  TEXT NOT NULL UNIQUE,
   label TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS partner_companies (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  name         TEXT NOT NULL,
+  status       TEXT NOT NULL DEFAULT 'ongoing', -- 'done' | 'ongoing'
+  interval     TEXT DEFAULT 'quarterly',
+  lang         TEXT DEFAULT 'de',
+  premium      TEXT DEFAULT '',
+  contact      TEXT DEFAULT '',
+  last_meeting TEXT DEFAULT '',
+  link         TEXT DEFAULT '',
+  created_at   TEXT DEFAULT (datetime('now')),
+  updated_at   TEXT DEFAULT (datetime('now'))
+);
+

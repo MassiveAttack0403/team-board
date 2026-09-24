@@ -1,4 +1,4 @@
-// Version: 0.3.1 — Team Board API
+// Version: 0.4.0 — Team Board API
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -10,6 +10,7 @@ const tasksRouter = require('./routes/tasks');
 const absencesRouter = require('./routes/absences');
 const standupsRouter = require('./routes/standups');
 const planRouter = require('./routes/plan');
+const partnersRouter = require('./routes/partners');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -22,8 +23,9 @@ app.use('/api/tasks', tasksRouter);
 app.use('/api/absences', absencesRouter);
 app.use('/api/standups', standupsRouter);
 app.use('/api/plan', planRouter);
+app.use('/api/partners', partnersRouter);
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '0.3.1' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '0.4.0' }));
 
 // Statisches Frontend servieren wenn public/ oder dist/ vorhanden (Produktions-Export oder Dev)
 const candidateDirs = [
@@ -72,6 +74,12 @@ if (publicDir) {
   });
 }
 
+// Zentraler Error-Handler
+app.use((err, req, res, next) => {
+  console.error('[team-board] API Error:', err);
+  res.status(500).json({ error: err.message || 'Internal Server Error' });
+});
+
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[team-board] v0.3.1 — API listening on 0.0.0.0:${PORT}`);
+  console.log(`[team-board] v0.4.0 — API listening on 0.0.0.0:${PORT}`);
 });

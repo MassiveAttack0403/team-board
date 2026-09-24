@@ -29,28 +29,30 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | Security-Check / OWASP | `Skill("security-review")` |
 | End-to-End UI-Prüfung / Browser-Tests | MCP `playwright` (`browser_navigate`, `browser_snapshot`) |
 
-## Versionsindex (Stand v1.2.5)
+## Versionsindex (Stand v1.3.0)
 
 | Bereich | Datei | Version | Beschreibung |
 |---|---|---|---|
-| **Projekt** | `README.md` / `CHANGELOG.md` | v1.2.5 | Gesamtrelease & Dokumentation |
-| **Backend API** | `backend/src/index.js` | v0.3.1 | Express Server, Multi-Pfad Frontend-Static-Serving |
-| **Backend DB** | `backend/src/db/index.js` | v0.1.4 | SQLite DB-Init, robuste `resolveDbPath()` |
-| **Backend Seed** | `backend/src/db/seed.js` | v0.2.0 | Standard-Seed (13 Mitarbeiter, Tasks, Abwesenheiten) |
-| **Backend Seed** | `backend/src/db/seed-aug-sep.js` | v0.1.0 | Consultingplan Aug–Sep 2026 Whiteboard-Seed |
-| **Backend Import** | `backend/src/db/import-plan-csv.js` | v0.1.0 | CSV-Import Consultingplan (Windows-1252) |
-| **Backend Fill** | `backend/src/db/fill-plan-defaults.js`| v0.1.0 | Werktage mit `consulting_blocked` auffüllen |
-| **Routen** | `backend/src/routes/plan.js` | v0.2.0 | Consultingplan API (`/api/plan`) |
-| **Routen** | `backend/src/routes/tasks.js` | v0.1.2 | Tasks API (`/api/tasks`) |
-| **Routen** | `backend/src/routes/members.js` | v0.1.1 | Mitarbeiter API (`/api/members`) |
-| **Routen** | `backend/src/routes/absences.js` | v0.1.1 | Abwesenheiten API (`/api/absences`) |
-| **Routen** | `backend/src/routes/standups.js` | v0.1.0 | Standups API (`/api/standups`) |
-| **Frontend App** | `frontend/src/App.jsx` | v0.5.0 | Routing (`/`, `/plan`, `/absences`, `/partnering`, ...) |
-| **Frontend API** | `frontend/src/api/client.js` | v0.4.0 | Axios Client mit `/api` BaseURL |
-| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v0.8.0 | Consultingplan mit 12 Monatsblöcken & Colspan |
-| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.4.1 | Task-Board DnD-Spalten |
+| **Projekt** | `README.md` / `CHANGELOG.md` | v1.3.0 | Gesamtrelease & Dokumentation |
+| **Backend API** | `backend/src/index.js` | v0.4.0 | Express Server, Partners Route, Error Handling, Multi-Pfad Static |
+| **Backend DB** | `backend/src/db/index.js` | v0.1.5 | SQLite DB-Init, Partner Seeding, robuste `resolveDbPath()` |
+| **Backend Seed** | `backend/src/db/seed.js` | v0.3.0 | Standard-Seed mit Transaktion |
+| **Backend Seed** | `backend/src/db/seed-aug-sep.js` | v0.2.0 | Consultingplan Aug–Sep 2026 Seed mit Transaktion |
+| **Backend Seed** | `backend/src/db/seed-partners.js` | v0.1.1 | 35 Partnerfirmen DB Seed |
+| **Backend Import** | `backend/src/db/import-plan-csv.js` | v0.2.0 | CSV-Import Consultingplan mit Transaktion |
+| **Backend Fill** | `backend/src/db/fill-plan-defaults.js`| v0.2.0 | Werktage mit `consulting_blocked` auffüllen (mit Transaktion) |
+| **Routen** | `backend/src/routes/plan.js` | v0.3.0 | Consultingplan API (`/api/plan`), Range POST, Absences Mirroring |
+| **Routen** | `backend/src/routes/tasks.js` | v0.2.0 | Tasks API (`/api/tasks`) mit Error Handling |
+| **Routen** | `backend/src/routes/members.js` | v0.2.0 | Mitarbeiter API (`/api/members`) mit Error Handling |
+| **Routen** | `backend/src/routes/absences.js` | v0.2.0 | Abwesenheiten API (`/api/absences`) mit Error Handling |
+| **Routen** | `backend/src/routes/standups.js` | v0.2.0 | Standups API (`/api/standups`) mit Error Handling |
+| **Routen** | `backend/src/routes/partners.js` | v0.1.0 | Partnerunternehmen API (`/api/partners`) |
+| **Frontend App** | `frontend/src/App.jsx` | v0.6.0 | Client-side SPA Routing ohne Page-Reload |
+| **Frontend API** | `frontend/src/api/client.js` | v0.5.0 | Axios Client mit Partner CRUD & Plan Range |
+| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v0.9.0 | Consultingplan mit Multi-Day Range, Excel/CSV Export & Shortcut 'T' |
+| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.5.0 | Task-Board DnD-Spalten mit Shortcut 'N' & 'Escape' |
 | **Frontend Abwesenheit**| `frontend/src/components/AbsenceCalendar.jsx` | v0.1.1 | 5-Wochen-Abwesenheitsmatrix |
-| **Frontend Partnering** | `frontend/src/components/Partnering.jsx` | v0.1.0 | 34 Partnerfirmen Statusmatrix |
+| **Frontend Partnering** | `frontend/src/components/Partnering.jsx` | v0.2.0 | 35 Partnerfirmen aus DB mit Create/Edit-Modal |
 | **Frontend Stunden** | `frontend/src/components/StundenStatistik.jsx` | v0.1.0 | Stacked Bar Chart KW30–KW33 |
 | **Starter (Dev)** | `start.bat` | v1.2.5 | Lokaler Starter mit Node.js-Prüfung & Hilfe |
 | **Starter (Portable)** | `scripts/start-portable.bat` | v1.2.4 | Starter für No-Node Zielrechner |

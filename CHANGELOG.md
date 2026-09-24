@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.3.0] — 2026-09-24
+
+### Added
+- **Excel/CSV Export für Consultingplan**: Ein-Klick-Export des aktuellen Fiskaljahres direkt als deutsche Excel-kompatible CSV-Datei (Semikolon-separiert mit BOM).
+- **Multi-Day Range Selektion im Consultingplan**: Im Popover kann per Checkbox "Zeitraum (mehrere Tage)" ein Bis-Datum gewählt werden, um ganze Wochen/Zeiträume auf einmal einzutragen.
+- **Automatisches Einspiegeln von Abwesenheiten in den Plan**: Urlaube und Abwesenheiten aus dem Team-Board werden im Consultingplan automatisch als Urlaubsblöcke dargestellt.
+- **Partnering for Success DB-Anbindung (`/api/partners`)**: Tabelle `partner_companies` in SQLite integriert mit vollständiger CRUD-REST-API, Modal zum Anlegen und Bearbeiten von Partnerfirmen und automatischem Seed.
+- **Globale Tastatur-Shortcuts**:
+  - `T`: Springt im Consultingplan sofort mit sanftem Scroll zum aktuellen Monat.
+  - `N`: Startet im Board sofort die Eingabe für einen neuen Task in Spalte 1.
+  - `Escape`: Schließt alle offenen Modale und Popovers.
+
+### Changed
+- **Client-Side SPA Routing**: Umstellung der Navigation auf `window.history.pushState` — Ansichten wechseln sofort (0ms) ohne Flackern oder Full-Page-Reloads.
+- **Backend Robustheit & Transaktionen**: Alle API-Routen (`plan`, `tasks`, `members`, `absences`, `standups`, `partners`) mit strukturiertem Error-Handling und SQLite-Transaktionen (`BEGIN TRANSACTION ... COMMIT`) gegen Teil-Updates abgesichert.
+
 ## [1.2.5] — 2026-09-23
 
 ### Changed

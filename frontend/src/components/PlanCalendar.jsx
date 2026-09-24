@@ -1,10 +1,9 @@
-// Version: 0.8.0
+// Version: 0.9.0 — PlanCalendar mit CSV/Excel-Export, Multi-Day Range Selektion, Tastatur-Shortcuts
 import React, { useEffect, useState, useRef } from 'react';
-import { getMembers, getPlan, getHolidays, setPlanEntry, deletePlanEntry } from '../api/client';
-import { endOfMonth, addDays, format, getISOWeek, isToday } from 'date-fns';
+import { getMembers, getPlan, getHolidays, setPlanEntry, setPlanRange, deletePlanEntry } from '../api/client';
+import { endOfMonth, addDays, format, getISOWeek, isToday, parseISO } from 'date-fns';
 
 // Austrian national public holidays (Gesetzliche Feiertage) — static for fiscal years 2024-2027
-// Easter: 2024=Mar31, 2025=Apr20, 2026=Apr5, 2027=Mar28
 const AT_HOLIDAYS = new Set([
   // 2024
   '2024-01-01','2024-01-06','2024-04-01','2024-05-01','2024-05-09','2024-05-19','2024-05-30',
@@ -39,7 +38,6 @@ const TYPE_MAP = Object.fromEntries(PLAN_TYPES.map(t => [t.key, t]));
 const WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
 const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const FISCAL_YEARS = [2024, 2025, 2026];
-// One month per block, fiscal year order Oct–Sep
 const BLOCK_DEFS = [9, 10, 11, 0, 1, 2, 3, 4, 5, 6, 7, 8];
 
 function ds(d) { return format(d, 'yyyy-MM-dd'); }
@@ -97,12 +95,10 @@ export default function PlanCalendar() {
   const fromStr = `${fiscalYear}-10-01`;
   const toStr   = `${fiscalYear + 1}-09-30`;
 
-  useEffect(() => { getMembers().then(setMembers); }, []);
-
-  useEffect(() => {
+  const reloadData = () => {
     getPlan(fromStr, toStr).then(rows => {
       const map = {};
-      for (const r of rows) map[`${r.member_id}:${r.date}`] = { type: r.type, label: r.label || '' };
+      for (const r of rows) map[`${r.member_id}:${r.date}`] = { type: r.type, label: r.label || '', source: r.source };
       setEntries(map);
     });
     getHolidays(fromStr, toStr).then(rows => {
@@ -110,14 +106,38 @@ export default function PlanCalendar() {
       for (const r of rows) map[r.date] = r.label;
       setHolidays(map);
     });
-  }, [fromStr, toStr]);
+  };
 
-  // Auto-scroll to today's month block after members load or fiscal year changes
+  useEffect(() => { getMembers().then(setMembers); }, []);
+  useEffect(() => { reloadData(); }, [fromStr, toStr]);
+
+  // Auto-scroll to today
+  const scrollToToday = () => {
+    if (todayBlockRef.current) {
+      todayBlockRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   useEffect(() => {
     if (todayBlockRef.current && members.length > 0) {
       todayBlockRef.current.scrollIntoView({ block: 'start' });
     }
   }, [members.length, fiscalYear]);
+
+  // Global Keyboard Shortcuts ('t' für Heute, 'Escape' für Popover)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 't' || e.key === 'T') {
+        e.preventDefault();
+        scrollToToday();
+      } else if (e.key === 'Escape' && popover) {
+        setPopover(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [popover]);
 
   useEffect(() => {
     if (!popover) return;
@@ -129,18 +149,32 @@ export default function PlanCalendar() {
   const openCell = (memberId, dateStr, rect) => {
     const ex = entries[`${memberId}:${dateStr}`];
     setPopover({
-      memberId, dateStr,
+      memberId,
+      dateStr,
+      toDateStr: dateStr,
+      isRange: false,
       type:  ex?.type  || PLAN_TYPES[0].key,
       label: ex?.label || '',
-      x: Math.min(rect.left, window.innerWidth - 280),
-      y: Math.min(rect.bottom + 4, window.innerHeight - 270),
+      x: Math.min(rect.left, window.innerWidth - 300),
+      y: Math.min(rect.bottom + 4, window.innerHeight - 340),
     });
   };
 
   const saveCell = async () => {
-    const { memberId, dateStr, type, label } = popover;
-    await setPlanEntry(memberId, dateStr, { type, label: label || null });
-    setEntries(prev => ({ ...prev, [`${memberId}:${dateStr}`]: { type, label } }));
+    const { memberId, dateStr, toDateStr, isRange, type, label } = popover;
+    if (isRange && toDateStr && toDateStr > dateStr) {
+      await setPlanRange({
+        memberId,
+        from: dateStr,
+        to: toDateStr,
+        type,
+        label: label || null,
+      });
+      reloadData();
+    } else {
+      await setPlanEntry(memberId, dateStr, { type, label: label || null });
+      setEntries(prev => ({ ...prev, [`${memberId}:${dateStr}`]: { type, label } }));
+    }
     setPopover(null);
   };
 
@@ -149,6 +183,52 @@ export default function PlanCalendar() {
     await deletePlanEntry(memberId, dateStr);
     setEntries(prev => { const n = { ...prev }; delete n[`${memberId}:${dateStr}`]; return n; });
     setPopover(null);
+  };
+
+  // CSV/Excel Export (Semikolon-separiert für deutsches Excel)
+  const exportCsv = () => {
+    const allDays = [];
+    BLOCK_DEFS.forEach(m => {
+      const { dates } = getBlockData(fiscalYear, m);
+      const filtered = hideWeekends ? dates.filter(d => !isWE(d)) : dates;
+      filtered.forEach(d => allDays.push(d));
+    });
+
+    const header1 = ['Mitarbeiter', ...allDays.map(d => format(d, 'yyyy-MM-dd'))].join(';');
+    const header2 = ['KW', ...allDays.map(d => `KW ${getISOWeek(d)}`)].join(';');
+    const header3 = ['Wochentag', ...allDays.map(d => WD[d.getDay()])].join(';');
+
+    const rows = [header1, header2, header3];
+
+    members.forEach(m => {
+      const row = [m.name];
+      allDays.forEach(d => {
+        const dstr = ds(d);
+        if (AT_HOLIDAYS.has(dstr)) {
+          row.push('FEIERTAG');
+        } else {
+          const entry = entries[`${m.id}:${dstr}`];
+          if (entry) {
+            const ti = TYPE_MAP[entry.type];
+            const text = entry.label || (ti ? ti.label : entry.type);
+            row.push(`"${text.replace(/"/g, '""')}"`);
+          } else {
+            row.push('');
+          }
+        }
+      });
+      rows.push(row.join(';'));
+    });
+
+    const csvContent = '﻿' + rows.join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Consultingplan_${fiscalYear}-${fiscalYear + 1}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -164,6 +244,22 @@ export default function PlanCalendar() {
           </button>
         ))}
         <div style={{ flex: 1 }} />
+        <button
+          className="plan-we-toggle"
+          onClick={scrollToToday}
+          title="Direkt zum heutigen Monat scrollen (Taste: T)"
+          style={{ marginRight: 8 }}
+        >
+          Heute (T)
+        </button>
+        <button
+          className="plan-we-toggle"
+          onClick={exportCsv}
+          title="Consultingplan als CSV/Excel exportieren"
+          style={{ marginRight: 8 }}
+        >
+          Excel/CSV Export
+        </button>
         <button
           className={`plan-we-toggle${hideWeekends ? ' active' : ''}`}
           onClick={() => setHideWeekends(v => !v)}
@@ -272,6 +368,7 @@ export default function PlanCalendar() {
                         idx = end;
                       }
                     }
+
                     return (
                       <tr key={m.id} className={`plan-row${rowIdx % 2 === 1 ? ' plan-row-alt' : ''}`}>
                         <td className="plan-name-td">{m.name}</td>
@@ -330,6 +427,30 @@ export default function PlanCalendar() {
               </button>
             ))}
           </div>
+
+          <label className="modal-check" style={{ fontSize: '0.78rem', marginTop: 2 }}>
+            <input
+              type="checkbox"
+              checked={popover.isRange}
+              onChange={e => setPopover(p => ({ ...p, isRange: e.target.checked }))}
+            />
+            Zeitraum (mehrere Tage)
+          </label>
+
+          {popover.isRange && (
+            <div className="modal-row" style={{ alignItems: 'center' }}>
+              <span style={{ fontSize: '0.72rem', color: '#64748b' }}>Bis:</span>
+              <input
+                type="date"
+                className="modal-input"
+                style={{ fontSize: '0.75rem', padding: '4px 6px' }}
+                value={popover.toDateStr}
+                min={popover.dateStr}
+                onChange={e => setPopover(p => ({ ...p, toDateStr: e.target.value }))}
+              />
+            </div>
+          )}
+
           <input
             className="modal-input"
             placeholder="Projekttext (optional)"

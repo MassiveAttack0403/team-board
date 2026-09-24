@@ -1,4 +1,4 @@
-// Version: 0.4.0
+// Version: 0.5.0
 import axios from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
@@ -24,4 +24,10 @@ export const createStandup = (payload) => api.post('/standups', payload).then(r 
 export const getPlan = (from, to) => api.get('/plan', { params: { from, to } }).then(r => r.data);
 export const getHolidays = (from, to) => api.get('/plan/holidays', { params: { from, to } }).then(r => r.data);
 export const setPlanEntry = (memberId, date, data) => api.put(`/plan/${memberId}/${date}`, data).then(r => r.data);
+export const setPlanRange = (payload) => api.post('/plan/range', payload).then(r => r.data);
 export const deletePlanEntry = (memberId, date) => api.delete(`/plan/${memberId}/${date}`).then(r => r.data);
+
+export const getPartners = () => api.get('/partners').then(r => r.data);
+export const createPartner = (payload) => api.post('/partners', payload).then(r => r.data);
+export const updatePartner = (id, payload) => api.patch(`/partners/${id}`, payload).then(r => r.data);
+export const deletePartner = (id) => api.delete(`/partners/${id}`).then(r => r.data);

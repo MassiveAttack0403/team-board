@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 1.2.5
+## Version: 1.3.0
 
 ## Schnellstart ohne Installation (Windows)
 
@@ -35,8 +35,9 @@ Das Team Board kann ohne Node.js, Git oder sonstige Software-Voraussetzungen auf
 - Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
 - Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
-- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 12 einzelne Monatsblöcke untereinander (ein Monat pro Tabelle), 12 Kategorietypen, Ferien-Zeile, CSV-Import; Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau; Multi-Tag-Blöcke als colspan; Auto-Scroll auf heute beim Laden; amber Heute-Marker
-- **Partnering for Success** (`/partnering`): Tabelle mit 34 Partnerunternehmen, farbkodiert nach Status (done=grün / ongoing=gelb), Filter-Buttons
+- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 12 einzelne Monatsblöcke untereinander (ein Monat pro Tabelle), 12 Kategorietypen, Ferien-Zeile, CSV-Import & Excel-Export; automatische Spiegelung von Urlauben/Abwesenheiten; Zeitraumauswahl (Multi-Day Range); Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau; Multi-Tag-Blöcke als colspan; Auto-Scroll auf heute beim Laden; amber Heute-Marker; Tastatur-Shortcut `T`
+- **Partnering for Success** (`/partnering`): Tabelle mit 35 Partnerunternehmen in SQLite-Datenbank, farbkodiert nach Status (done=grün / ongoing=gelb), Filter-Buttons, Erstellen & Bearbeiten direkt in der UI
+- **Instant Client-Side Navigation**: SPA-Routing ohne Page-Reloads oder Flackern via HTML5 History API
 - **Stunden Statistik** (`/stunden`): Horizontales Stacked-Bar-Chart, KW30–KW33, 7 Buchungskategorien
 - **SR Statistik** (`/sr`): Platzhalter für Power BI-Integration (Daten von Rainer)
 - Team verwalten: Mitarbeiter hinzufügen / entfernen

@@ -1,6 +1,6 @@
 {
   "name": "team-board-backend",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Team Board – API Server",
   "main": "src/index.js",
   "scripts": {
@@ -9,7 +9,8 @@
     "seed": "node --experimental-sqlite src/db/seed.js",
     "import-plan": "node --experimental-sqlite src/db/import-plan-csv.js",
     "fill-plan": "node --experimental-sqlite src/db/fill-plan-defaults.js",
-    "seed-aug-sep": "node --experimental-sqlite src/db/seed-aug-sep.js"
+    "seed-aug-sep": "node --experimental-sqlite src/db/seed-aug-sep.js",
+    "seed-partners": "node --experimental-sqlite src/db/seed-partners.js"
   },
   "dependencies": {
     "express": "^4.19.2",

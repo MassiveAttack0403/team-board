@@ -1,4 +1,4 @@
-// Version: 0.4.1
+// Version: 0.5.0
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
@@ -259,6 +259,25 @@ export default function Board() {
     setMembers(prev => prev.filter(m => m.id !== id));
     setTasks(prev => prev.filter(t => t.member_id !== id));
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'n' || e.key === 'N') {
+        if (members.length > 0) {
+          e.preventDefault();
+          setAddingTo(members[0].id);
+        }
+      } else if (e.key === 'Escape') {
+        setEditingTask(null);
+        setAbsenceModal(null);
+        setShowMemberPanel(false);
+        setAddingTo(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [members]);
 
   const week = `KW ${getISOWeek(new Date())} / ${format(new Date(), 'yyyy')}`;
 

@@ -1,8 +1,10 @@
-// Version: 0.2.0 — Seed: Mitarbeiter + Tasks + Abwesenheiten + Plan-Einträge (Stand 2026-08-19)
+// Version: 0.3.0 — Seed: Mitarbeiter + Tasks + Abwesenheiten + Plan-Einträge (Stand 2026-08-19, mit Transaktion)
 'use strict';
 const { getDb } = require('./index');
 
 const db = getDb();
+db.exec('BEGIN TRANSACTION');
+try {
 
 const members = [
   { name: 'Mousser Kerkeni',        email: null },
@@ -200,4 +202,9 @@ planRange('Markus Gerstl',           'consulting_blocked', '2026-11-09', '2026-1
 planRange('Corinna Rehberger-Gruber','training_ordered',  '2026-11-02', '2026-11-30', 'Trainer org');
 planRange('Gernot Dachs',            'training_blocked',  '2026-11-02', '2026-11-28', 'Basis Training');
 
-console.log('Seed done:', members.length, 'members,', tasks.length, 'tasks,', absences.length, 'absences, plan_entries added');
+  db.exec('COMMIT');
+  console.log('Seed done:', members.length, 'members,', tasks.length, 'tasks,', absences.length, 'absences, plan_entries added');
+} catch (err) {
+  db.exec('ROLLBACK');
+  throw err;
+}

@@ -1,4 +1,4 @@
-// Version: 0.1.0 — CSV import for Consultingplan (Windows-1252 encoded)
+// Version: 0.2.0 — CSV import for Consultingplan (Windows-1252 encoded) with transaction
 // Usage: npm run import-plan [-- --dry-run]
 const fs = require('fs');
 const path = require('path');
@@ -110,44 +110,54 @@ function importAll() {
 
   let planCount = 0, holidayCount = 0, skipCount = 0;
 
-  for (const { file, fiscalYear } of CSV_FILES) {
-    if (!fs.existsSync(file)) { console.log(`SKIP: ${file} not found`); continue; }
-    const content = fs.readFileSync(file, 'latin1');
-    const blocks = parseBlocks(content);
-    console.log(`[${fiscalYear}] ${blocks.length} blocks in ${path.basename(file)}`);
+  if (!DRY_RUN) db.exec('BEGIN TRANSACTION');
+  try {
+    const insertHolidayStmt = DRY_RUN ? null : db.prepare('INSERT OR REPLACE INTO holiday_entries (date, label) VALUES (?, ?)');
+    const insertPlanStmt = DRY_RUN ? null : db.prepare('INSERT OR REPLACE INTO plan_entries (member_id, date, type, label) VALUES (?, ?, ?, ?)');
 
-    for (const block of blocks) {
-      const colDateMap = buildColDateMap(block, fiscalYear);
-      if (!Object.keys(colDateMap).length) continue;
+    for (const { file, fiscalYear } of CSV_FILES) {
+      if (!fs.existsSync(file)) { console.log(`SKIP: ${file} not found`); continue; }
+      const content = fs.readFileSync(file, 'latin1');
+      const blocks = parseBlocks(content);
+      console.log(`[${fiscalYear}] ${blocks.length} blocks in ${path.basename(file)}`);
 
-      if (block.ferienRow) {
-        for (const [col, dateStr] of Object.entries(colDateMap)) {
-          const text = (block.ferienRow[col] || '').trim();
-          if (!text) continue;
-          if (!DRY_RUN) db.prepare('INSERT OR REPLACE INTO holiday_entries (date, label) VALUES (?, ?)').run(dateStr, text);
-          console.log(`  holiday ${dateStr}: ${text}`);
-          holidayCount++;
+      for (const block of blocks) {
+        const colDateMap = buildColDateMap(block, fiscalYear);
+        if (!Object.keys(colDateMap).length) continue;
+
+        if (block.ferienRow) {
+          for (const [col, dateStr] of Object.entries(colDateMap)) {
+            const text = (block.ferienRow[col] || '').trim();
+            if (!text) continue;
+            if (!DRY_RUN) insertHolidayStmt.run(dateStr, text);
+            console.log(`  holiday ${dateStr}: ${text}`);
+            holidayCount++;
+          }
         }
-      }
 
-      for (const memberRow of block.memberRows) {
-        const rawName = (memberRow[1] || '').trim();
-        if (!rawName) continue;
-        const memberId = memberMap[rawName.toLowerCase()];
-        if (!memberId) {
-          console.log(`  SKIP member: "${rawName}"`);
-          skipCount++;
-          continue;
-        }
-        for (const [col, dateStr] of Object.entries(colDateMap)) {
-          const text = (memberRow[col] || '').trim();
-          if (!text) continue;
-          const type = inferType(text);
-          if (!DRY_RUN) db.prepare('INSERT OR REPLACE INTO plan_entries (member_id, date, type, label) VALUES (?, ?, ?, ?)').run(memberId, dateStr, type, text);
-          planCount++;
+        for (const memberRow of block.memberRows) {
+          const rawName = (memberRow[1] || '').trim();
+          if (!rawName) continue;
+          const memberId = memberMap[rawName.toLowerCase()];
+          if (!memberId) {
+            console.log(`  SKIP member: "${rawName}"`);
+            skipCount++;
+            continue;
+          }
+          for (const [col, dateStr] of Object.entries(colDateMap)) {
+            const text = (memberRow[col] || '').trim();
+            if (!text) continue;
+            const type = inferType(text);
+            if (!DRY_RUN) insertPlanStmt.run(memberId, dateStr, type, text);
+            planCount++;
+          }
         }
       }
     }
+    if (!DRY_RUN) db.exec('COMMIT');
+  } catch (err) {
+    if (!DRY_RUN) db.exec('ROLLBACK');
+    throw err;
   }
 
   console.log(`\nDone: ${planCount} plan entries, ${holidayCount} holidays${DRY_RUN ? ' [DRY RUN]' : ''}, ${skipCount} members skipped`);

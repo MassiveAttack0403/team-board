@@ -1,4 +1,4 @@
-// Version: 0.3.0 — Seed: Mitarbeiter + Tasks + Abwesenheiten + Plan-Einträge (Stand 2026-08-19, mit Transaktion)
+// Version: 0.3.1 — Seed: Mitarbeiter + Tasks + Abwesenheiten + Plan-Einträge (Stand 2026-08-19, mit Transaktion)
 'use strict';
 const { getDb } = require('./index');
 
@@ -22,6 +22,7 @@ const members = [
   { name: 'Gernot Dachs',           email: null },
 ];
 
+db.exec('DELETE FROM members WHERE id NOT IN (SELECT MIN(id) FROM members GROUP BY name)');
 const insertMember = db.prepare('INSERT OR IGNORE INTO members (name, email, display_order) VALUES (?,?,?)');
 members.forEach((m, i) => insertMember.run(m.name, m.email, i));
 
@@ -65,13 +66,14 @@ const tasks = [
   { member: 'Gernot Dachs',           title: 'Mo & Di' },
 ];
 
+const existingTask = db.prepare('SELECT id FROM tasks WHERE member_id=? AND title=?');
 const insertTask = db.prepare('INSERT INTO tasks (member_id, title, position) VALUES (?,?,?)');
 const posMap = {};
 tasks.forEach(t => {
   const row = getId.get(t.member);
   if (!row) return;
   posMap[row.id] = (posMap[row.id] || 0);
-  insertTask.run(row.id, t.title, posMap[row.id]++);
+  if (!existingTask.get(row.id, t.title)) { insertTask.run(row.id, t.title, posMap[row.id]++); }
 });
 
 const absences = [
@@ -84,11 +86,12 @@ const absences = [
   { member: 'Gernot Dachs',       type: 'URLAUB', from: '2026-08-18', to: '2026-09-03' },
 ];
 
+const existingAbsence = db.prepare('SELECT id FROM absences WHERE member_id=? AND date_from=? AND date_to=?');
 const insertAbsence = db.prepare('INSERT INTO absences (member_id, type, date_from, date_to, notes) VALUES (?,?,?,?,?)');
 absences.forEach(a => {
   const row = getId.get(a.member);
   if (!row) return;
-  insertAbsence.run(row.id, a.type, a.from, a.to, a.notes || null);
+  if (!existingAbsence.get(row.id, a.from, a.to)) { insertAbsence.run(row.id, a.type, a.from, a.to, a.notes || null); }
 });
 
 const insertPlan = db.prepare(`

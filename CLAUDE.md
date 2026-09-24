@@ -35,8 +35,9 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 |---|---|---|---|
 | **Projekt** | `README.md` / `CHANGELOG.md` | v1.3.0 | Gesamtrelease & Dokumentation |
 | **Backend API** | `backend/src/index.js` | v0.4.0 | Express Server, Partners Route, Error Handling, Multi-Pfad Static |
-| **Backend DB** | `backend/src/db/index.js` | v0.1.5 | SQLite DB-Init, Partner Seeding, robuste `resolveDbPath()` |
-| **Backend Seed** | `backend/src/db/seed.js` | v0.3.0 | Standard-Seed mit Transaktion |
+| **Backend DB** | `backend/src/db/index.js` | v0.1.6 | SQLite DB-Init, Partner Seeding, robuste `resolveDbPath()`, Duplicate-Cleanup |
+| **Backend DB Schema** | `backend/src/db/schema.sql` | v0.3.1 | Schema mit UNIQUE(name) auf members |
+| **Backend Seed** | `backend/src/db/seed.js` | v0.3.1 | Idempotenter Standard-Seed mit Transaktion |
 | **Backend Seed** | `backend/src/db/seed-aug-sep.js` | v0.2.0 | Consultingplan Aug–Sep 2026 Seed mit Transaktion |
 | **Backend Seed** | `backend/src/db/seed-partners.js` | v0.1.1 | 35 Partnerfirmen DB Seed |
 | **Backend Import** | `backend/src/db/import-plan-csv.js` | v0.2.0 | CSV-Import Consultingplan mit Transaktion |

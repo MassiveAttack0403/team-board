@@ -1,8 +1,8 @@
--- Team Board Schema v0.3.0
+-- Team Board Schema v0.3.1
 
 CREATE TABLE IF NOT EXISTS members (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  name        TEXT NOT NULL,
+  name        TEXT NOT NULL UNIQUE,
   email       TEXT UNIQUE,
   display_order INTEGER DEFAULT 0
 );

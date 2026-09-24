@@ -3,6 +3,11 @@
 ## [1.3.2] — 2026-09-24
 
 ### Fixed
+- **Datenbank-Duplikate bereinigt & abgesichert**:
+  - `backend/src/db/schema.sql` (v0.3.1): `UNIQUE`-Constraint auf `members(name)` ergänzt.
+  - `backend/src/db/index.js` (v0.1.6): Automatische Bereinigung und Unique-Index-Migration beim DB-Start integriert.
+  - `backend/src/db/seed.js` (v0.3.1): Idempotent gemacht – verhindert, dass mehrmaliges Ausführen des Seeds Spalten, Tasks oder Abwesenheiten vervielfacht.
+  - Bereinigung der Datenbank von mehrfachen Mitarbeiter-Spalten (wieder auf genau 13 Mitglieder und 30 Tasks konsolidiert).
 - **Dev-Starter & Export-Builder Node.js-Prüfung**: In `start.bat` und `build-export.bat` führte die Syntaxprüfung `if errorlevel 1 (...)` mit verschachtelten Klammern in `echo`-Zeilen sowie die `node --version >nul 2>&1`-Umleitung auf manchen Windows 11-Installationen zu irreführenden Fehlermeldungen ("Node.js wurde auf diesem Computer nicht gefunden" bzw. Syntaxfehlern). Auf robuste `where node >nul 2>&1` mit `goto`-Verzweigung umgestellt. Versionen auf v1.3.2 aktualisiert.
 
 ## [1.3.1] — 2026-09-24

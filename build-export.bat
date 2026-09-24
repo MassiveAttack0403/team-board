@@ -1,12 +1,11 @@
-:: Version: 1.3.0 — Team Board Portable Export Builder
+:: Version: 1.3.1 - Team Board Portable Export Builder
 @echo off
-chcp 65001 >nul
-title Team Board — Export Builder
+title Team Board - Export Builder
 
 echo.
-echo  ============================================
-echo   Team Board — Portable Export Builder v1.3.0
-echo  ============================================
+echo ============================================
+echo  Team Board - Portable Export Builder v1.3.1
+echo ============================================
 echo.
 echo  Erstellt eine self-contained ZIP die auf
 echo  jedem Windows-Rechner (ohne Node.js) laeuft.
@@ -90,10 +89,10 @@ echo  [5/7] Node.js portable bereitstellen...
 set "ACTUAL_NODE_ZIP="
 if exist "%~dp0node-portable.zip" (
     set "ACTUAL_NODE_ZIP=%~dp0node-portable.zip"
-    echo         node-portable.zip vorhanden — verwende lokales Archiv.
+    echo         node-portable.zip vorhanden - verwende lokales Archiv.
 ) else if exist "%~dp0%NODE_ZIP%" (
     set "ACTUAL_NODE_ZIP=%~dp0%NODE_ZIP%"
-    echo         %NODE_ZIP% vorhanden — verwende lokales Archiv.
+    echo         %NODE_ZIP% vorhanden - verwende lokales Archiv.
 ) else (
     echo         Lade Node.js v%NODE_VERSION% herunter...
     powershell -Command "try { Invoke-WebRequest -Uri '%NODE_URL%' -OutFile '%~dp0%NODE_ZIP%' -UseBasicParsing } catch { Write-Error $_.Exception.Message; exit 1 }"
@@ -158,7 +157,7 @@ echo.
 echo  Auf dem Zielrechner:
 echo    1. ZIP entpacken
 echo    2. start.bat doppelklicken
-echo    3. Fertig — kein Node.js noetig
+echo    3. Fertig - kein Node.js noetig
 echo.
 echo  Dateigroesse:
 powershell -Command "$s=(Get-Item '%ZIP_NAME%').Length; Write-Host ('  ' + [math]::Round($s/1MB,1) + ' MB')"

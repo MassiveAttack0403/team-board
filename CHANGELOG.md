@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.1] — 2026-09-24
+
+### Fixed
+- **Windows Batch Zeilenenden & Zeichenkodierung**: `start.bat`, `scripts/start-portable.bat` und `build-export.bat` strikt auf CRLF und reines ASCII bereinigt. UTF-8 Em-Dashes (`—`) und LF-Zeilenumbrüche, die in Windows `cmd.exe` zu Parse-Fehlern führten, vollständig behoben.
+
 ## [1.3.0] — 2026-09-24
 
 ### Added

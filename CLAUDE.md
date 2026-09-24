@@ -54,9 +54,9 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | **Frontend Abwesenheit**| `frontend/src/components/AbsenceCalendar.jsx` | v0.1.1 | 5-Wochen-Abwesenheitsmatrix |
 | **Frontend Partnering** | `frontend/src/components/Partnering.jsx` | v0.2.0 | 35 Partnerfirmen aus DB mit Create/Edit-Modal |
 | **Frontend Stunden** | `frontend/src/components/StundenStatistik.jsx` | v0.1.0 | Stacked Bar Chart KW30–KW33 |
-| **Starter (Dev)** | `start.bat` | v1.3.0 | Lokaler Starter mit PATH-Fallback fuer Standard-Node-Pfade |
-| **Starter (Portable)** | `scripts/start-portable.bat` | v1.3.0 | Starter für No-Node Zielrechner |
-| **Export Builder**| `build-export.bat` | v1.3.0 | Baut portable self-contained ZIP |
+| **Starter (Dev)** | `start.bat` | v1.3.1 | Lokaler Starter (reines ASCII, CRLF, PATH-Fallback) |
+| **Starter (Portable)** | `scripts/start-portable.bat` | v1.3.1 | Starter für No-Node Zielrechner (reines ASCII, CRLF) |
+| **Export Builder**| `build-export.bat` | v1.3.1 | Baut portable self-contained ZIP |
 
 ## Stack
 - **Frontend**: React 18 + @hello-pangea/dnd + Vite (Port 5173 im Dev-Modus)

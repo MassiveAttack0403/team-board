@@ -1,10 +1,10 @@
-:: Version: 1.3.1 - Team Board Portable Export Builder
+:: Version: 1.3.2 - Team Board Portable Export Builder
 @echo off
 title Team Board - Export Builder
 
 echo.
 echo ============================================
-echo  Team Board - Portable Export Builder v1.3.1
+echo  Team Board - Portable Export Builder v1.3.2
 echo ============================================
 echo.
 echo  Erstellt eine self-contained ZIP die auf
@@ -18,26 +18,20 @@ set NODE_ZIP=node-v%NODE_VERSION%-win-x64.zip
 set NODE_URL=https://nodejs.org/dist/v%NODE_VERSION%/%NODE_ZIP%
 
 :: Standard-Node.js Pfade zum PATH hinzufuegen falls nicht vorhanden
-if exist "C:\Program Files\nodejs\node.exe" (
-    set "PATH=C:\Program Files\nodejs;%PATH%"
-)
-if exist "%LOCALAPPDATA%\Programs\node\node.exe" (
-    set "PATH=%LOCALAPPDATA%\Programs\node;%PATH%"
-)
-if exist "%USERPROFILE%\AppData\Local\Programs\node\node.exe" (
-    set "PATH=%USERPROFILE%\AppData\Local\Programs\node;%PATH%"
-)
+if exist "C:\Program Files\nodejs\node.exe" set "PATH=C:\Program Files\nodejs;%PATH%"
+if exist "%LOCALAPPDATA%\Programs\node\node.exe" set "PATH=%LOCALAPPDATA%\Programs\node;%PATH%"
+if exist "%USERPROFILE%\AppData\Local\Programs\node\node.exe" set "PATH=%USERPROFILE%\AppData\Local\Programs\node;%PATH%"
 
 :: -------------------------------------------------------
 :: 1. Voraussetzungen pruefen
 :: -------------------------------------------------------
-node --version >nul 2>&1
+where node >nul 2>&1
 if errorlevel 1 (
     echo  FEHLER: Node.js nicht gefunden. Auf diesem Build-Rechner wird
     echo         Node.js benoetigt um das Frontend zu bauen.
     pause & exit /b 1
 )
-call npm --version >nul 2>&1
+where npm >nul 2>&1
 if errorlevel 1 (
     echo  FEHLER: npm nicht gefunden.
     pause & exit /b 1

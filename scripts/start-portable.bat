@@ -1,4 +1,4 @@
-:: Version: 1.3.1 - Team Board Portable Starter
+:: Version: 1.3.2 - Team Board Portable Starter
 @echo off
 title Team Board
 

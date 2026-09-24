@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.2] — 2026-09-24
+
+### Fixed
+- **Dev-Starter & Export-Builder Node.js-Prüfung**: In `start.bat` und `build-export.bat` führte die Syntaxprüfung `if errorlevel 1 (...)` mit verschachtelten Klammern in `echo`-Zeilen sowie die `node --version >nul 2>&1`-Umleitung auf manchen Windows 11-Installationen zu irreführenden Fehlermeldungen ("Node.js wurde auf diesem Computer nicht gefunden" bzw. Syntaxfehlern). Auf robuste `where node >nul 2>&1` mit `goto`-Verzweigung umgestellt. Versionen auf v1.3.2 aktualisiert.
+
 ## [1.3.1] — 2026-09-24
 
 ### Fixed

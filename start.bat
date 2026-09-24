@@ -1,4 +1,4 @@
-:: Version: 1.2.5 — Team Board Dev Starter
+:: Version: 1.3.0 — Team Board Dev Starter (mit auto PATH-Erkennung fuer Standard-Installationspfade)
 @echo off
 chcp 65001 >nul
 title Team Board — Dev Starter
@@ -8,6 +8,17 @@ echo  ===================================
 echo   Team Board — Dev Starter
 echo  ===================================
 echo.
+
+:: Standard-Node.js Pfade zum PATH hinzufuegen falls nicht vorhanden
+if exist "C:\Program Files\nodejs\node.exe" (
+    set "PATH=C:\Program Files\nodejs;%PATH%"
+)
+if exist "%LOCALAPPDATA%\Programs\node\node.exe" (
+    set "PATH=%LOCALAPPDATA%\Programs\node;%PATH%"
+)
+if exist "%USERPROFILE%\AppData\Local\Programs\node\node.exe" (
+    set "PATH=%USERPROFILE%\AppData\Local\Programs\node;%PATH%"
+)
 
 :: Node.js pruefen
 node --version >nul 2>&1
@@ -33,7 +44,7 @@ if errorlevel 1 (
 
 for /f "delims=" %%v in ('node -e "process.stdout.write(String(parseInt(process.version.slice(1))))"') do set NODE_MAJOR=%%v
 if %NODE_MAJOR% LSS 22 (
-    echo  FEHLER: Node.js 22+ benoetigt ^(gefunden: v%NODE_MAJOR%^).
+    echo  FEHLER: Node.js 22+ benoetigt (gefunden: v%NODE_MAJOR%).
     echo  Bitte aktualisieren: https://nodejs.org
     pause
     exit /b 1
@@ -84,13 +95,13 @@ echo  Starte Server...
 echo.
 
 :: Backend in neuem Fenster
-start "Team Board — Backend ^(Port 3001^)" cmd /k "cd /d "%~dp0backend" && node --experimental-sqlite src/index.js"
+start "Team Board — Backend (Port 3001)" cmd /k "cd /d "%~dp0backend" && node --experimental-sqlite src/index.js"
 
 :: Kurz warten bis Backend hochgefahren
 timeout /t 2 /nobreak >nul
 
 :: Frontend in neuem Fenster
-start "Team Board — Frontend ^(Port 5173^)" cmd /k "cd /d "%~dp0frontend" && npx vite"
+start "Team Board — Frontend (Port 5173)" cmd /k "cd /d "%~dp0frontend" && npx vite"
 
 :: Browser oeffnen
 timeout /t 3 /nobreak >nul

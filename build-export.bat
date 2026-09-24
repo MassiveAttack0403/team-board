@@ -1,11 +1,11 @@
-:: Version: 1.2.4 — Team Board Portable Export Builder
+:: Version: 1.3.0 — Team Board Portable Export Builder
 @echo off
 chcp 65001 >nul
 title Team Board — Export Builder
 
 echo.
 echo  ============================================
-echo   Team Board — Portable Export Builder v1.2.4
+echo   Team Board — Portable Export Builder v1.3.0
 echo  ============================================
 echo.
 echo  Erstellt eine self-contained ZIP die auf
@@ -17,6 +17,17 @@ set ZIP_NAME=%~dp0team-board-export.zip
 set NODE_VERSION=22.14.0
 set NODE_ZIP=node-v%NODE_VERSION%-win-x64.zip
 set NODE_URL=https://nodejs.org/dist/v%NODE_VERSION%/%NODE_ZIP%
+
+:: Standard-Node.js Pfade zum PATH hinzufuegen falls nicht vorhanden
+if exist "C:\Program Files\nodejs\node.exe" (
+    set "PATH=C:\Program Files\nodejs;%PATH%"
+)
+if exist "%LOCALAPPDATA%\Programs\node\node.exe" (
+    set "PATH=%LOCALAPPDATA%\Programs\node;%PATH%"
+)
+if exist "%USERPROFILE%\AppData\Local\Programs\node\node.exe" (
+    set "PATH=%USERPROFILE%\AppData\Local\Programs\node;%PATH%"
+)
 
 :: -------------------------------------------------------
 :: 1. Voraussetzungen pruefen

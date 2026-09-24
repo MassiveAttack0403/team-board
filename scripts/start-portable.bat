@@ -1,4 +1,4 @@
-:: Version: 1.2.4 — Team Board Portable Starter
+:: Version: 1.3.0 — Team Board Portable Starter
 @echo off
 chcp 65001 >nul
 title Team Board

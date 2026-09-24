@@ -13,6 +13,7 @@
   - `Escape`: Schließt alle offenen Modale und Popovers.
 
 ### Changed
+- **Start-Skripte (`start.bat`, `build-export.bat`) v1.3.0**: Automatische PATH-Erkennung für Node.js in Standard-Installationspfaden (`C:\Program Files\nodejs` etc.), sodass der Dev-Starter auch dann sauber funktioniert, wenn Node.js nicht im globalen PATH registriert ist.
 - **Client-Side SPA Routing**: Umstellung der Navigation auf `window.history.pushState` — Ansichten wechseln sofort (0ms) ohne Flackern oder Full-Page-Reloads.
 - **Backend Robustheit & Transaktionen**: Alle API-Routen (`plan`, `tasks`, `members`, `absences`, `standups`, `partners`) mit strukturiertem Error-Handling und SQLite-Transaktionen (`BEGIN TRANSACTION ... COMMIT`) gegen Teil-Updates abgesichert.
 

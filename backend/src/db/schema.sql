@@ -1,4 +1,4 @@
--- Team Board Schema v0.3.1
+-- Team Board Schema v0.3.2
 
 CREATE TABLE IF NOT EXISTS members (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   notes       TEXT,
   priority    INTEGER DEFAULT 0,         -- 0=normal 1=high
   due_date    TEXT,                      -- ISO date YYYY-MM-DD
+  color_category TEXT DEFAULT 'black',   -- 'black' | 'blue' | 'red' | 'green'
   position    INTEGER DEFAULT 0,         -- sort order within column
   source      TEXT DEFAULT 'manual',     -- 'manual' | 'email' | 'import'
   source_ref  TEXT,                      -- email message-id if from Outlook

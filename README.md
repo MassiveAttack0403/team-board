@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 1.3.3
+## Version: 1.4.0
 
 ## Schnellstart ohne Installation (Windows)
 
@@ -30,12 +30,13 @@ Das Team Board kann ohne Node.js, Git oder sonstige Software-Voraussetzungen auf
 
 ## Features
 
-- Board: eine Spalte pro Mitarbeiter, Drag & Drop zwischen Spalten
-- Tasks anlegen, bearbeiten (Titel / Notizen / Priorität / Fälligkeitsdatum), löschen
+- Board: eine Spalte pro Mitarbeiter, Drag & Drop zwischen Spalten, fixe untere Sektion für 4 Spezial-Mitarbeiter (Corinna, Markus W., Andreas, Gernot)
+- Tasks anlegen, bearbeiten (Titel / Notizen / Priorität / Fälligkeitsdatum / Schriftfarben-Kategorie: Standard, Urlaub/ZA, Onsite, Diverses), löschen
+- Tasks kopieren: Per Ein-Klick-Button an einen oder mehrere Kollegen duplizieren
 - Priorität: sichtbarer "HOCH"-Chip auf der Task-Karte + rote Umrandung
 - Fälligkeitsdatum: Farb-Badge auf der Karte (überfällig / heute / bald / normal)
 - Abwesenheiten (URLAUB, ZA, KS, OTHER) mit Datumsbereich eintragen und löschen
-- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 12 einzelne Monatsblöcke untereinander (ein Monat pro Tabelle), 12 Kategorietypen, Ferien-Zeile, CSV-Import & Excel-Export; automatische Spiegelung von Urlauben/Abwesenheiten; Zeitraumauswahl (Multi-Day Range); Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau; Multi-Tag-Blöcke als colspan; Auto-Scroll auf heute beim Laden; amber Heute-Marker; Tastatur-Shortcut `T`
+- **Plan-Kalender** (`/plan`): Consultingplan mit Jahres-Tabs (2024/25–2026/27), 12 einzelne Monatsblöcke untereinander (ein Monat pro Tabelle), 12 Kategorietypen, Ferien-Zeile, CSV-Import (Button in UI) & Excel-Export; Wochenenden (Sa/So) standardmäßig eingeblendet; automatische Spiegelung von Urlauben/Abwesenheiten; Zeitraumauswahl (Multi-Day Range); Wochenend-Toggle, KW-Trennlinien, Typ-Kürzel in Zellen; leere Zellen weiß, österreichische Feiertage automatisch grau; Multi-Tag-Blöcke als colspan; Auto-Scroll auf heute beim Laden; amber Heute-Marker; Tastatur-Shortcut `T`
 - **Partnering for Success** (`/partnering`): Tabelle mit 35 Partnerunternehmen in SQLite-Datenbank, farbkodiert nach Status (done=grün / ongoing=gelb), Filter-Buttons, Erstellen & Bearbeiten direkt in der UI
 - **Instant Client-Side Navigation**: SPA-Routing ohne Page-Reloads oder Flackern via HTML5 History API
 - **Stunden Statistik** (`/stunden`): Horizontales Stacked-Bar-Chart, KW30–KW33, 7 Buchungskategorien

@@ -1,4 +1,4 @@
-// Version: 0.4.0 — Team Board API
+// Version: 0.5.0 — Team Board API
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -25,7 +25,7 @@ app.use('/api/standups', standupsRouter);
 app.use('/api/plan', planRouter);
 app.use('/api/partners', partnersRouter);
 
-app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '0.4.0' }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '0.5.0' }));
 
 // Statisches Frontend servieren wenn public/ oder dist/ vorhanden (Produktions-Export oder Dev)
 const candidateDirs = [

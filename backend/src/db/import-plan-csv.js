@@ -1,4 +1,4 @@
-// Version: 0.2.0 — CSV import for Consultingplan (Windows-1252 encoded) with transaction
+// Version: 0.2.1 — CSV import for Consultingplan (Windows-1252 / UTF-8) with transaction
 // Usage: npm run import-plan [-- --dry-run]
 const fs = require('fs');
 const path = require('path');
@@ -31,10 +31,10 @@ function inferType(text) {
   if (!text) return 'consulting_blocked';
   const t = text.toLowerCase();
   if (/homeoffice|home office|\bho\b|extended ho/i.test(text)) return 'home_office';
-  if (/urlaub|\bza\b|papamont/i.test(text)) return 'vacation';
+  if (/urlaub|\bza\b|papamonat|papamont|\bu\b/i.test(text)) return 'vacation';
   if (/reha/i.test(text)) return 'other_event';
   if (/\breise\b|\bgrl\b/i.test(text)) return 'travel';
-  if (/training|schulung|ttt|workshop/i.test(text)) return 'training_blocked';
+  if (/training|schulung|ttt|workshop|basis/i.test(text)) return 'training_blocked';
   if (/krank/i.test(text)) return 'other_event';
   if (/partner|\buko\b/i.test(text)) return 'partner';
   return 'consulting_blocked';
@@ -117,7 +117,12 @@ function importAll() {
 
     for (const { file, fiscalYear } of CSV_FILES) {
       if (!fs.existsSync(file)) { console.log(`SKIP: ${file} not found`); continue; }
-      const content = fs.readFileSync(file, 'latin1');
+      const rawBuf = fs.readFileSync(file);
+      // Auto-detect UTF-8 or Latin1
+      let content = rawBuf.toString('utf8');
+      if (content.includes('�')) {
+        content = rawBuf.toString('latin1');
+      }
       const blocks = parseBlocks(content);
       console.log(`[${fiscalYear}] ${blocks.length} blocks in ${path.basename(file)}`);
 

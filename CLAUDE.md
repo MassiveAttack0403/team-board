@@ -29,29 +29,29 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | Security-Check / OWASP | `Skill("security-review")` |
 | End-to-End UI-Prüfung / Browser-Tests | MCP `playwright` (`browser_navigate`, `browser_snapshot`) |
 
-## Versionsindex (Stand v1.3.3)
+## Versionsindex (Stand v1.4.0)
 
 | Bereich | Datei | Version | Beschreibung |
 |---|---|---|---|
-| **Projekt** | `README.md` / `CHANGELOG.md` | v1.3.3 | Gesamtrelease & Dokumentation |
-| **Backend API** | `backend/src/index.js` | v0.4.0 | Express Server, Partners Route, Error Handling, Multi-Pfad Static |
-| **Backend DB** | `backend/src/db/index.js` | v0.1.6 | SQLite DB-Init, Partner Seeding, robuste `resolveDbPath()`, Duplicate-Cleanup |
-| **Backend DB Schema** | `backend/src/db/schema.sql` | v0.3.1 | Schema mit UNIQUE(name) auf members |
+| **Projekt** | `README.md` / `CHANGELOG.md` | v1.4.0 | Gesamtrelease & Dokumentation |
+| **Backend API** | `backend/src/index.js` | v0.5.0 | Express Server, Partners Route, Error Handling, Multi-Pfad Static |
+| **Backend DB** | `backend/src/db/index.js` | v0.1.7 | SQLite DB-Init, color_category Migration, Partner Seeding |
+| **Backend DB Schema** | `backend/src/db/schema.sql` | v0.3.2 | Schema mit color_category auf tasks |
 | **Backend Seed** | `backend/src/db/seed.js` | v0.3.1 | Idempotenter Standard-Seed mit Transaktion |
 | **Backend Seed** | `backend/src/db/seed-aug-sep.js` | v0.2.0 | Consultingplan Aug–Sep 2026 Seed mit Transaktion |
 | **Backend Seed** | `backend/src/db/seed-partners.js` | v0.1.1 | 35 Partnerfirmen DB Seed |
-| **Backend Import** | `backend/src/db/import-plan-csv.js` | v0.2.0 | CSV-Import Consultingplan mit Transaktion |
+| **Backend Import** | `backend/src/db/import-plan-csv.js` | v0.2.1 | CSV-Import Consultingplan (UTF-8/Latin1) mit Transaktion |
 | **Backend Fill** | `backend/src/db/fill-plan-defaults.js`| v0.2.0 | Werktage mit `consulting_blocked` auffüllen (mit Transaktion) |
-| **Routen** | `backend/src/routes/plan.js` | v0.3.0 | Consultingplan API (`/api/plan`), Range POST, Absences Mirroring |
-| **Routen** | `backend/src/routes/tasks.js` | v0.2.0 | Tasks API (`/api/tasks`) mit Error Handling |
+| **Routen** | `backend/src/routes/plan.js` | v0.4.0 | Consultingplan API (`/api/plan`), Range POST, CSV-Import (`/import-csv`), Absences Mirroring |
+| **Routen** | `backend/src/routes/tasks.js` | v0.3.0 | Tasks API (`/api/tasks`) mit Copy-Route (`/:id/copy`), color_category & Error Handling |
 | **Routen** | `backend/src/routes/members.js` | v0.2.0 | Mitarbeiter API (`/api/members`) mit Error Handling |
 | **Routen** | `backend/src/routes/absences.js` | v0.2.0 | Abwesenheiten API (`/api/absences`) mit Error Handling |
 | **Routen** | `backend/src/routes/standups.js` | v0.2.0 | Standups API (`/api/standups`) mit Error Handling |
 | **Routen** | `backend/src/routes/partners.js` | v0.1.0 | Partnerunternehmen API (`/api/partners`) |
 | **Frontend App** | `frontend/src/App.jsx` | v0.6.0 | Client-side SPA Routing ohne Page-Reload |
-| **Frontend API** | `frontend/src/api/client.js` | v0.5.0 | Axios Client mit Partner CRUD & Plan Range |
-| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v0.9.0 | Consultingplan mit Multi-Day Range, Excel/CSV Export & Shortcut 'T' |
-| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.5.0 | Task-Board DnD-Spalten mit Shortcut 'N' & 'Escape' |
+| **Frontend API** | `frontend/src/api/client.js` | v0.6.0 | Axios Client mit Partner CRUD, Plan Range, Task Copy & CSV Import |
+| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v1.0.0 | Consultingplan mit Sa/So standardmäßig sichtbar, CSV Import & Export, Shortcut 'T' |
+| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.6.0 | Task-Board DnD-Spalten mit Kopieren-Button, Farbauswahl & fixer unterer Sektion (4 MA) |
 | **Frontend Abwesenheit**| `frontend/src/components/AbsenceCalendar.jsx` | v0.1.1 | 5-Wochen-Abwesenheitsmatrix |
 | **Frontend Partnering** | `frontend/src/components/Partnering.jsx` | v0.2.0 | 35 Partnerfirmen aus DB mit Create/Edit-Modal |
 | **Frontend Stunden** | `frontend/src/components/StundenStatistik.jsx` | v0.1.0 | Stacked Bar Chart KW30–KW33 |

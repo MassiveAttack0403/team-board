@@ -1,6 +1,6 @@
-// Version: 0.9.0 — PlanCalendar mit CSV/Excel-Export, Multi-Day Range Selektion, Tastatur-Shortcuts
+// Version: 1.0.0 — PlanCalendar mit CSV/Excel-Export & Import, Multi-Day Range Selektion, Sa/So standardmäßig sichtbar, Tastatur-Shortcuts
 import React, { useEffect, useState, useRef } from 'react';
-import { getMembers, getPlan, getHolidays, setPlanEntry, setPlanRange, deletePlanEntry } from '../api/client';
+import { getMembers, getPlan, getHolidays, setPlanEntry, setPlanRange, deletePlanEntry, importPlanCsv } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday, parseISO } from 'date-fns';
 
 // Austrian national public holidays (Gesetzliche Feiertage) — static for fiscal years 2024-2027
@@ -83,11 +83,14 @@ export default function PlanCalendar() {
     const now = new Date();
     return now.getMonth() >= 9 ? now.getFullYear() : now.getFullYear() - 1;
   });
-  const [hideWeekends, setHideWeekends] = useState(true);
+  const [hideWeekends, setHideWeekends] = useState(false);
   const [members, setMembers] = useState([]);
   const [entries, setEntries] = useState({});
   const [holidays, setHolidays] = useState({});
   const [popover, setPopover] = useState(null);
+  const [importing, setImporting] = useState(false);
+  const [importMsg, setImportMsg] = useState('');
+  const fileInputRef = useRef(null);
   const popRef = useRef(null);
   const todayBlockRef = useRef(null);
   const now = new Date();
@@ -231,6 +234,26 @@ export default function PlanCalendar() {
     document.body.removeChild(link);
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    setImportMsg('Importiere…');
+    try {
+      const text = await file.text();
+      const res = await importPlanCsv({ csvContent: text, fiscalYear });
+      setImportMsg(`Erfolg: ${res.importedPlanEntries} Einträge importiert!`);
+      reloadData();
+      setTimeout(() => setImportMsg(''), 4000);
+    } catch (err) {
+      console.error('Import failed', err);
+      setImportMsg(`Fehler: ${err?.response?.data?.error || err.message}`);
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="plan-wrap">
       <div className="plan-year-tabs">
@@ -244,6 +267,27 @@ export default function PlanCalendar() {
           </button>
         ))}
         <div style={{ flex: 1 }} />
+        {importMsg && (
+          <span style={{ fontSize: '0.78rem', color: importMsg.startsWith('Fehler') ? '#dc2626' : '#16a34a', fontWeight: 600, marginRight: 12 }}>
+            {importMsg}
+          </span>
+        )}
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          accept=".csv,.txt"
+          onChange={handleFileUpload}
+        />
+        <button
+          className="plan-we-toggle"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={importing}
+          title="Consultingplan CSV-Datei importieren (überschreibt bestehende Daten)"
+          style={{ marginRight: 8, background: '#f0fdf4', borderColor: '#86efac', color: '#166534' }}
+        >
+          {importing ? 'Importiere…' : '📥 CSV Import'}
+        </button>
         <button
           className="plan-we-toggle"
           onClick={scrollToToday}

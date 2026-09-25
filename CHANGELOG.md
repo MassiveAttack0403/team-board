@@ -1,11 +1,23 @@
 # Changelog
 
+## [1.4.0] — 2026-09-25
+
+### Added
+- **Task Kopieren-Funktion**: Im `TaskModal` Button "Kopieren" ergänzt. Öffnet eine übersichtliche Checkliste der Kollegen mit "Alle auswählen"-Funktion, um Tasks mit allen Details (Titel, Notizen, Priorität, Fälligkeitsdatum, Farbkategorie) per Klick an einen oder mehrere Mitarbeiter zu duplizieren (`POST /api/tasks/:id/copy`).
+- **Task Farbkategorien (Schriftfarbe / Stil)**: Radio-Optionen im Modal für:
+  - ⚪ **Schwarz / Standard**
+  - 🔵 **Blau** = Urlaub / ZA
+  - 🔴 **Rot** = Onsite
+  - 🟢 **Grün** = Diverses
+  Die gewählte Kategorie wird in der DB (`color_category` in `tasks`) gespeichert und auf den Task-Karten im Board mit passendem Schrift- und Akzentdesign visualisiert.
+- **CSV-Import direkt in der UI (`/plan`)**: Neuer Button "CSV Import" im Consultingplan. Ermöglicht das Hochladen einer Consultingplan-CSV (z.B. `Consultingplan(2026-27).csv`), parst Monats-/Wochenblöcke, aktualisiert die DB atomar in einer Transaktion und aktualisiert den Plan live (`POST /api/plan/import-csv`).
+- **Consultingplan 2026/27 Daten importiert**: Daten aus `C:\INCOMING\Consultingplan(2026-27).csv` vollständig eingespielt (inkl. Reiseblöcke, Con-Train, Papamonat, CSW, Herbstferien, Semesterferien etc.).
+
+### Changed
+- **Fixierte untere Mitarbeiter-Leiste**: Die 4 Mitarbeiter (*Corinna Rehberger-Gruber*, *Markus Weber*, *Andreas Kautek*, *Gernot Dachs*) sind nun in einer separaten unteren Sektion fest am Bildschirmende verankert und bleiben auch bei Skalierung, Zoom oder vielen Tasks der oberen Reihe immer sauber unten angeordnet.
+- **Wochenenden (Sa/So) standardmäßig sichtbar**: Im Consultingplan (`/plan`) ist `hideWeekends` standardmäßig auf `false` gesetzt, sodass Samstag und Sonntag sofort vollständig dargestellt werden.
+
 ## [1.3.3] — 2026-09-25
-
-### Fixed
-- **Claude Code SessionStart Hook Bash Syntax-Error**: In `.claude/settings.json` war der `echo`-Befehl im `SessionStart`-Hook nicht in Quotes gesetzt. Dadurch führten runde Klammern wie `(npm run dev)` in Git Bash (`/usr/bin/bash -c`) zu einem Syntaxfehler (`syntax error near unexpected token '('`). Befehlstexte sauber in Quotes gesetzt.
-
-## [1.3.2] — 2026-09-24
 
 ### Fixed
 - **Datenbank-Duplikate bereinigt & abgesichert**:

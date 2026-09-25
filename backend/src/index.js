@@ -81,5 +81,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[team-board] v0.4.0 — API listening on 0.0.0.0:${PORT}`);
+  console.log(`[team-board] v0.5.0 — API listening on 0.0.0.0:${PORT}`);
 });

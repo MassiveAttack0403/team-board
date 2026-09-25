@@ -2,7 +2,7 @@
 
 Digitales Whiteboard für Abteilungs-Task-Management (13 Personen, Siemens ETM).
 
-## Version: 1.4.0
+## Version: 1.4.1
 
 ## Schnellstart ohne Installation (Windows)
 

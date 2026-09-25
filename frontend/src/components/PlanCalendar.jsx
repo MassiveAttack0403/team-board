@@ -1,4 +1,4 @@
-// Version: 1.0.0 — PlanCalendar mit CSV/Excel-Export & Import, Multi-Day Range Selektion, Sa/So standardmäßig sichtbar, Tastatur-Shortcuts
+// Version: 1.0.1 — PlanCalendar mit CSV/Excel-Export & Import, Multi-Day Range Selektion, Sa/So standardmäßig sichtbar, Tastatur-Shortcuts
 import React, { useEffect, useState, useRef } from 'react';
 import { getMembers, getPlan, getHolidays, setPlanEntry, setPlanRange, deletePlanEntry, importPlanCsv } from '../api/client';
 import { endOfMonth, addDays, format, getISOWeek, isToday, parseISO } from 'date-fns';
@@ -286,7 +286,7 @@ export default function PlanCalendar() {
           title="Consultingplan CSV-Datei importieren (überschreibt bestehende Daten)"
           style={{ marginRight: 8, background: '#f0fdf4', borderColor: '#86efac', color: '#166534' }}
         >
-          {importing ? 'Importiere…' : '📥 CSV Import'}
+          {importing ? 'Importiere…' : 'CSV Import'}
         </button>
         <button
           className="plan-we-toggle"

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1] — 2026-09-25
+
+### Fixed
+- **Lokaler Server-Neustart & Task-Kopieren**: Backend-Serverprozess auf Port 3001 mit neuester Route `POST /api/tasks/:id/copy` synchronisiert, sodass das Duplizieren von Tasks an Kollegen auch im lokalen Dev-Modus einwandfrei funktioniert.
+- **Spaltenbreiten vereinheitlicht**: Die 4 unteren Personen (`.board-bottom-grid`) nutzen nun exakt dasselbe Grid wie oben (`repeat(auto-fill, minmax(180px, 1fr))`), sodass ihre Spaltenbreite identisch zu den oberen Spalten ist.
+- **UI Bereinigung**: Titel `"Training / Support & Consulting"` über der unteren Leiste entfernt.
+- **Button-Optik**: Clipboard-Icon `📋` beim Button "Kopieren" im Task-Modal sowie Download-Icon `📥` beim CSV-Import im Plan-Kalender entfernt für ein sauberes Erscheinungsbild.
+
 ## [1.4.0] — 2026-09-25
 
 ### Added

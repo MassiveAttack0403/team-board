@@ -1,4 +1,4 @@
-// Version: 0.6.0
+// Version: 0.6.1
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import {
@@ -192,7 +192,7 @@ function TaskModal({ task, members, onClose, onSave, onDelete, onCopy }) {
             onClick={() => setShowCopySection(v => !v)}
             title="Diesen Task für einen oder mehrere andere Kollegen kopieren"
           >
-            📋 Kopieren
+            Kopieren
           </button>
         </div>
       </div>
@@ -533,7 +533,6 @@ export default function Board() {
           {/* Untere Sektion: Immer unten fixierte 4 Kollegen */}
           {bottomMembers.length > 0 && (
             <div className="board-bottom-section">
-              <div className="board-bottom-title">Training / Support & Consulting</div>
               <div className="board-bottom-grid">
                 {bottomMembers.map((member, idx) => renderColumn(member, topMembers.length + idx))}
               </div>

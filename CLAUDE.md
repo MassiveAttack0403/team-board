@@ -29,11 +29,11 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | Security-Check / OWASP | `Skill("security-review")` |
 | End-to-End UI-Prüfung / Browser-Tests | MCP `playwright` (`browser_navigate`, `browser_snapshot`) |
 
-## Versionsindex (Stand v1.4.0)
+## Versionsindex (Stand v1.4.1)
 
 | Bereich | Datei | Version | Beschreibung |
 |---|---|---|---|
-| **Projekt** | `README.md` / `CHANGELOG.md` | v1.4.0 | Gesamtrelease & Dokumentation |
+| **Projekt** | `README.md` / `CHANGELOG.md` | v1.4.1 | Gesamtrelease & Dokumentation |
 | **Backend API** | `backend/src/index.js` | v0.5.0 | Express Server, Partners Route, Error Handling, Multi-Pfad Static |
 | **Backend DB** | `backend/src/db/index.js` | v0.1.7 | SQLite DB-Init, color_category Migration, Partner Seeding |
 | **Backend DB Schema** | `backend/src/db/schema.sql` | v0.3.2 | Schema mit color_category auf tasks |
@@ -50,8 +50,8 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | **Routen** | `backend/src/routes/partners.js` | v0.1.0 | Partnerunternehmen API (`/api/partners`) |
 | **Frontend App** | `frontend/src/App.jsx` | v0.6.0 | Client-side SPA Routing ohne Page-Reload |
 | **Frontend API** | `frontend/src/api/client.js` | v0.6.0 | Axios Client mit Partner CRUD, Plan Range, Task Copy & CSV Import |
-| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v1.0.0 | Consultingplan mit Sa/So standardmäßig sichtbar, CSV Import & Export, Shortcut 'T' |
-| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.6.0 | Task-Board DnD-Spalten mit Kopieren-Button, Farbauswahl & fixer unterer Sektion (4 MA) |
+| **Frontend Plan**| `frontend/src/components/PlanCalendar.jsx` | v1.0.1 | Consultingplan mit Sa/So standardmäßig sichtbar, CSV Import & Export, Shortcut 'T' |
+| **Frontend Board**| `frontend/src/components/Board.jsx` | v0.6.1 | Task-Board DnD-Spalten mit Kopieren-Button (ohne Icon), Farbauswahl & fixer unterer Sektion |
 | **Frontend Abwesenheit**| `frontend/src/components/AbsenceCalendar.jsx` | v0.1.1 | 5-Wochen-Abwesenheitsmatrix |
 | **Frontend Partnering** | `frontend/src/components/Partnering.jsx` | v0.2.0 | 35 Partnerfirmen aus DB mit Create/Edit-Modal |
 | **Frontend Stunden** | `frontend/src/components/StundenStatistik.jsx` | v0.1.0 | Stacked Bar Chart KW30–KW33 |

@@ -3,6 +3,7 @@
 ## [1.4.0] — 2026-09-25
 
 ### Added
+- **1-Klick Auto-Updater (`update.bat`)**: Für Portable-Installationen auf Zielrechnern. Sichert die SQLite-Datenbank (`app\data\board.db`) automatisch mit Datumsstempel nach `backups\`, lädt das neueste Release von GitHub herunter, aktualisiert Frontend und Backend und behält die lokalen Daten unberührt.
 - **Task Kopieren-Funktion**: Im `TaskModal` Button "Kopieren" ergänzt. Öffnet eine übersichtliche Checkliste der Kollegen mit "Alle auswählen"-Funktion, um Tasks mit allen Details (Titel, Notizen, Priorität, Fälligkeitsdatum, Farbkategorie) per Klick an einen oder mehrere Mitarbeiter zu duplizieren (`POST /api/tasks/:id/copy`).
 - **Task Farbkategorien (Schriftfarbe / Stil)**: Radio-Optionen im Modal für:
   - ⚪ **Schwarz / Standard**

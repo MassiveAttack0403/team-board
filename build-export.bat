@@ -1,10 +1,10 @@
-:: Version: 1.3.2 - Team Board Portable Export Builder
+:: Version: 1.4.0 - Team Board Portable Export Builder
 @echo off
 title Team Board - Export Builder
 
 echo.
 echo ============================================
-echo  Team Board - Portable Export Builder v1.3.2
+echo  Team Board - Portable Export Builder v1.4.0
 echo ============================================
 echo.
 echo  Erstellt eine self-contained ZIP die auf
@@ -129,8 +129,9 @@ copy  /Y "%~dp0backend\package.json" "%EXPORT_DIR%\app\package.json" >nul
 mkdir "%EXPORT_DIR%\app\public"
 robocopy "%~dp0frontend\dist" "%EXPORT_DIR%\app\public" /E /MIR /NP /NFL /NDL /NJH /NJS >nul
 
-:: start.bat ins Export-Root kopieren
+:: start.bat und update.bat ins Export-Root kopieren
 copy /Y "%~dp0scripts\start-portable.bat" "%EXPORT_DIR%\start.bat" >nul
+copy /Y "%~dp0scripts\update.bat" "%EXPORT_DIR%\update.bat" >nul
 
 :: -------------------------------------------------------
 :: 7. ZIP erstellen

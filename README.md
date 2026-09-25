@@ -28,6 +28,13 @@ Das Team Board kann ohne Node.js, Git oder sonstige Software-Voraussetzungen auf
      ```
    - Das Konsolenfenster während der Nutzung geöffnet lassen. Zum Beenden das Konsolenfenster schließen.
 
+## Updates einspielen (ohne Datenverlust)
+
+In jedem entpackten Portable-Ordner liegt neben `start.bat` das Skript **`update.bat`**:
+1. Doppelklick auf **`update.bat`**.
+2. Das Skript beendet den Server, sichert die SQLite-Datenbank (`app\data\board.db`) automatisch nach `app\data\backups\`, lädt das neueste Release von GitHub herunter und aktualisiert Frontend und Backend, **ohne** Ihre bestehenden Daten zu überschreiben.
+3. Danach wie gewohnt `start.bat` starten.
+
 ## Features
 
 - Board: eine Spalte pro Mitarbeiter, Drag & Drop zwischen Spalten, fixe untere Sektion für 4 Spezial-Mitarbeiter (Corinna, Markus W., Andreas, Gernot)

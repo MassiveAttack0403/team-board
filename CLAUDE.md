@@ -57,7 +57,8 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | **Frontend Stunden** | `frontend/src/components/StundenStatistik.jsx` | v0.1.0 | Stacked Bar Chart KW30–KW33 |
 | **Starter (Dev)** | `start.bat` | v1.3.2 | Lokaler Starter (where-Pruefung, goto-Sprungmarken, reines ASCII, CRLF) |
 | **Starter (Portable)** | `scripts/start-portable.bat` | v1.3.2 | Starter für No-Node Zielrechner (reines ASCII, CRLF) |
-| **Export Builder**| `build-export.bat` | v1.3.2 | Baut portable self-contained ZIP (where-Pruefung) |
+| **Updater (Portable)** | `scripts/update.bat` | v1.4.0 | 1-Klick Auto-Updater mit automatischem DB-Backup |
+| **Export Builder**| `build-export.bat` | v1.4.0 | Baut portable self-contained ZIP inkl. update.bat |
 
 ## Stack
 - **Frontend**: React 18 + @hello-pangea/dnd + Vite (Port 5173 im Dev-Modus)

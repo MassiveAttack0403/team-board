@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.3] — 2026-09-25
+
+### Fixed
+- **Claude Code SessionStart Hook Bash Syntax-Error**: In `.claude/settings.json` war der `echo`-Befehl im `SessionStart`-Hook nicht in Quotes gesetzt. Dadurch führten runde Klammern wie `(npm run dev)` in Git Bash (`/usr/bin/bash -c`) zu einem Syntaxfehler (`syntax error near unexpected token '('`). Befehlstexte sauber in Quotes gesetzt.
+
 ## [1.3.2] — 2026-09-24
 
 ### Fixed

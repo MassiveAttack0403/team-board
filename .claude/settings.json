@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo [ROLLE] Senior Fullstack Developer + Software Architect. [SKILLS] Code-Review: Skill code-review. Dev-Server: backend Port 3001 (npm run dev) + frontend Port 5173 (npm run dev). SQLite: node --experimental-sqlite Flag noetig."
+            "command": "echo \"[ROLLE] Senior Fullstack Developer + Software Architect. [SKILLS] Code-Review: Skill code-review. Dev-Server: backend Port 3001 (npm run dev) + frontend Port 5173 (npm run dev). SQLite: node --experimental-sqlite Flag noetig.\""
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo [PFLICHT] Version erhoehen + File-Header + CHANGELOG + README + Startup-Log — alle 5 in EINEM Commit!"
+            "command": "echo \"[PFLICHT] Version erhoehen + File-Header + CHANGELOG + README + Startup-Log — alle 5 in EINEM Commit!\""
           }
         ]
       }

@@ -29,11 +29,11 @@ Du bist ein **Senior Fullstack Developer & Software Architect** mit Fokus auf pr
 | Security-Check / OWASP | `Skill("security-review")` |
 | End-to-End UI-Prüfung / Browser-Tests | MCP `playwright` (`browser_navigate`, `browser_snapshot`) |
 
-## Versionsindex (Stand v1.3.0)
+## Versionsindex (Stand v1.3.3)
 
 | Bereich | Datei | Version | Beschreibung |
 |---|---|---|---|
-| **Projekt** | `README.md` / `CHANGELOG.md` | v1.3.0 | Gesamtrelease & Dokumentation |
+| **Projekt** | `README.md` / `CHANGELOG.md` | v1.3.3 | Gesamtrelease & Dokumentation |
 | **Backend API** | `backend/src/index.js` | v0.4.0 | Express Server, Partners Route, Error Handling, Multi-Pfad Static |
 | **Backend DB** | `backend/src/db/index.js` | v0.1.6 | SQLite DB-Init, Partner Seeding, robuste `resolveDbPath()`, Duplicate-Cleanup |
 | **Backend DB Schema** | `backend/src/db/schema.sql` | v0.3.1 | Schema mit UNIQUE(name) auf members |
